@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="gravagnaApp">
+<html ng-app="nursingHomeApp">
 	<head>
 		<title>Residenza per anziani Maria Madre della Fiducia</title>
 		<meta charset="utf-8">
@@ -17,6 +17,8 @@
 		<script src="js/nursinghome.js" ></script>
 		
 		<script src="scripts/app.js" ></script>
+		<script src="scripts/controller/pazienti-list.js" ></script>
+		<script src="scripts/controller/pazienti-detail.js" ></script>
 		
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/bootstrap-theme.min.css" rel="stylesheet">
