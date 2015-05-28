@@ -2,9 +2,7 @@ var nursingHomeApp = angular.module('nursingHomeApp', [
 	'ui.bootstrap',                                                 	
 	'ngRoute',
 	'ngTable',
-	"ngSanitize",
-	"com.2fdevs.videogular",
-	"textAngular"
+	"ngSanitize"
 ]);
  
 nursingHomeApp.config(['$routeProvider', function($routeProvider) {
