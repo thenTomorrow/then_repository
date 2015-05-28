@@ -1,0 +1,138 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	font-size: 11pt; 
+	padding-top: 0px;
+	padding-bottom: 40px;
+	background-color: #eee;
+}
+
+.form-signin {
+	max-width: 330px;
+	padding: 15px;
+	margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+	margin-bottom: 10px;
+}
+.form-signin .checkbox {
+	font-weight: normal;
+}
+.form-signin .form-control {
+	position: relative;
+	height: auto;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	padding: 10px;
+	font-size: 16px;
+}
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+.form-signin input[type="email"] {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+.menu-item {
+	font-size: 17px;
+}
+.navbar-item {
+	font-size: 20px;
+}
+.order-item-size {
+	font-size: 15px;
+}
+.font-size-large {
+	font-size: 16px;
+}
+.font-size-15 {
+	font-size: 15px;
+}
+.table td {
+	vertical-align: middle !important;
+}
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+ 	background-color: #EAF5FB !important;
+}
+.error {
+	color: red;
+}
+
+.logo {
+	text-align: center;
+}
+
+.thumbnails-container {
+    display: inline-block;
+    position: relative;
+}
+
+.thumbnails-canc-button {
+	background-color: white;
+	border: none;
+	position: absolute;
+	left: 18px;
+	top: 3px;
+}
+
+.modal-large .modal-dialog {
+  	width: 80%;
+}
+
+.carousel-caption-custom {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	z-index: 10; 
+}
+
+.videogular-container {
+	width: 100%;
+	height: 320px;
+	margin: auto;
+	overflow: hidden;
+}
+
+@media (min-width: 1200px) {
+	.videogular-container {
+		width: 585px;
+		height: 329.062px;
+	}
+
+	.videogular-container.audio {
+		width: 585px;
+		height: 25px;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+	.videogular-container {
+		width: 470px;
+		height: 264.375px;
+	}
+
+	.videogular-container.audio {
+		width: 470px;
+		height: 25px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.videogular-container {
+		width: 364px;
+		height: 204.75px;
+	}
+
+	.videogular-container.audio {
+		width: 364px;
+		height: 25px;
+	}
+}
