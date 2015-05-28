@@ -39,9 +39,9 @@
 	          	</div>
 	        	<div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
 	        		<ul class="nav navbar-nav" ng-click="navCollapsed=true" ng-controller="HeaderController">
-		            	<li ng-class="{active:($location.path().indexOf('/pazienti')!=-1)}"><a href="#file"><i class="glyphicon glyphicon-file"></i> <span class="menu-item">Pazienti</span></a></li>
-		            	<li ng-class="{active:($location.path().indexOf('/farmaci')!=-1)}"><a href="#catalogo"><i class="glyphicon glyphicon-th-list"></i> <span class="menu-item">Farmaci</span></a></li>
-		            	<li ng-class="{active:($location.path().indexOf('/somministrazioni')!=-1)}"><a href="#certificazione"><i class="glyphicon glyphicon-check"></i> <span class="menu-item">Somministrazioni</span></a></li>
+		            	<li ng-class="{active:($location.path().indexOf('/pazienti')!=-1)}"><a href="#pazienti"><i class="glyphicon glyphicon-file"></i> <span class="menu-item">Pazienti</span></a></li>
+		            	<li ng-class="{active:($location.path().indexOf('/farmaci')!=-1)}"><a href="#farmaci"><i class="glyphicon glyphicon-th-list"></i> <span class="menu-item">Farmaci</span></a></li>
+		            	<li ng-class="{active:($location.path().indexOf('/somministrazioni')!=-1)}"><a href="#somministrazioni"><i class="glyphicon glyphicon-check"></i> <span class="menu-item">Somministrazioni</span></a></li>
 		            	<li><a href="logout"><i class="glyphicon glyphicon-log-out"></i> <span class="menu-item">Esci</span></a></li>
 	          		</ul>
 			        <form class="navbar-form navbar-left" role="search" ng-submit="navCollapsed=true;search(query);query=''">
