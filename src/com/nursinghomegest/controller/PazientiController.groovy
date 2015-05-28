@@ -100,7 +100,7 @@ class PazientiController {
 	public @ResponseBody Object insert(@RequestBody Object paziente) throws Exception {
 		sqlService.withSql { sql ->
 			
-			def res = sql.executeInsert("""INSERT INTO pazienti(nome,cognome)
+			def res = sql.executeInsert("""INSERT INTO paziente(nome,cognome)
 									       VALUES(${paziente.nome},${paziente.cognome})""")
 			def id = (res[0][0]).intValue()
 			return getPaziente(id)
