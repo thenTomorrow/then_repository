@@ -10,7 +10,7 @@
 		<script src="js/angular.min.js" ></script>
 		<script src="js/angular-route.min.js" ></script>
 		<script src="js/angular-locale_it-it.js" ></script>
-		<script src="js/ui-bootstrap-tpls-0.13.0.min.js" ></script>
+		<script src="js/ui-bootstrap-tpls-0.12.0.min.js" ></script>
 		<script src="js/underscore-min.js" ></script>
 		<script src="js/ng-table.min.js" ></script>
 		<script src="js/angular-sanitize.min.js" ></script>
