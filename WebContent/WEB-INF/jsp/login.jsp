@@ -5,7 +5,8 @@
   		<meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		 
+		<link rel="icon" type="image/png" href="img/logo.png" />
+		
 		<script src="js/jquery-2.1.4.min.js" ></script>
 		<script src="js/angular.min.js" ></script>
 		<script src="js/angular-route.min.js" ></script>
@@ -16,20 +17,30 @@
 		<link href="css/nursinghome.css" rel="stylesheet">
 	</head>
 	<body>
-		<div class="container" ng-controller="Login">
-	      	<form class="form-signin" ng-submit="login()" autocomplete="on">
-				<div class="logo">	
-					
-				</div>
-				<br/>
-	        	<div class="alert alert-danger alert-dismissable" ng-show="alert!=''" >
-		  	 		<button type="button" class="close" aria-hidden="true" ng-click="alert=''">&times;</button>
-		  			<strong>Attenzione!</strong> {{alert.msg}}.
-		  		</div>
-	        	<input type="text" id="username" ng-model="user.username" class="form-control" placeholder="Username" required autofocus>
-	        	<input type="password" id="password" ng-model="user.password" class="form-control" placeholder="Password">
-	        	<button class="btn btn-lg btn-success btn-block" type="submit">Accedi</button>
-	      	</form>
+		<div class="container" ng-controller="Login" style="text-align: center;width: 100%">
+			<br/>
+	      	<center>
+	      	<div class="panel panel-primary" style="padding: 2px;width: 400px;">
+				<div class="panel-heading">
+					Area Privata
+				</div>		
+				<div class="panel-body">
+			      	<form class="form-signin" ng-submit="login()" autocomplete="on">
+						<div class="logo">	
+							<img src="img/logo.png" width="300px">
+						</div>
+						<br/>
+			        	<div class="alert alert-danger alert-dismissable" ng-show="alert!=''" >
+				  	 		<button type="button" class="close" aria-hidden="true" ng-click="alert=''">&times;</button>
+				  			<strong>Attenzione!</strong> {{alert.msg}}.
+				  		</div>
+			        	<input type="text" id="username" ng-model="user.username" class="form-control" placeholder="Username" required autofocus>
+			        	<input type="password" id="password" ng-model="user.password" class="form-control" placeholder="Password">
+			        	<button class="btn btn-lg btn-primary btn-block" type="submit">Accedi</button>
+			      	</form>
+	      		</div>
+	      	</div>
+	      	</center>
    		</div>
 		
 		<script>
