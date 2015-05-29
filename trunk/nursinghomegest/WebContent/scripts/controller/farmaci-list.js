@@ -1,11 +1,11 @@
 var nursingHomeApp =  angular.module('nursingHomeApp');
  
-nursingHomeApp.controller('pazienti-list', ['$scope', '$http', '$location', '$filter', '$rootScope', '$modal', '$window', 'ngTableParams',
+nursingHomeApp.controller('farmaci-list', ['$scope', '$http', '$location', '$filter', '$rootScope', '$modal', '$window', 'ngTableParams',
   function ($scope, $http, $location, $filter, $rootScope, $modal, $window, ngTableParams) {
 	
 	$rootScope.loadingRoot = true;
 	
-    $http.get('pazienti/')
+    $http.get('farmaci/')
 	.success(function(data) {
 	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter);
 	    $rootScope.loadingRoot = false;
@@ -13,7 +13,7 @@ nursingHomeApp.controller('pazienti-list', ['$scope', '$http', '$location', '$fi
 	.error(function(){ });
     
     $scope.dettaglio = function (id) {
-    	$location.path('/pazienti/'+id);
+    	$location.path('/farmaci/'+id);
     };
     
     $scope.cancella = function (id) {
@@ -23,13 +23,13 @@ nursingHomeApp.controller('pazienti-list', ['$scope', '$http', '$location', '$fi
     		controller: 'ModalInstanceCtrl',
     		resolve: {
     			body: function () {
-    				return 'Vuoi veramente cancellare la scheda paziente?';
+    				return 'Vuoi veramente cancellare il farmaco?';
   	          	}
   		  	}
         });
 
     	modalInstance.result.then(function (selectedItem) {
-    		$http['delete']('pazienti/'+id).success(function(data){
+    		$http['delete']('farmaci/'+id).success(function(data){
     			$window.location.reload();
 	     	});
 	    }, function () {

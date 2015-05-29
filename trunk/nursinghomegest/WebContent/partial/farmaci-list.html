@@ -1,0 +1,52 @@
+<div style="padding: 2px;">
+
+	<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3>Attenzione</h3>
+        </div>
+        <div class="modal-body">
+            {{body}}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">
+				<i class="glyphicon glyphicon-ok"></i>
+				OK
+			</button>
+            <button class="btn btn-warning" ng-click="cancel()">
+				<i class="glyphicon glyphicon-ban-circle"></i>
+				Annulla
+			</button>
+        </div>
+    </script>
+
+	<div class="panel panel-primary" style="padding: 2px;">
+		<div class="panel-heading">
+			<a href="#/farmaci/new" class="btn btn-success" ><i class="glyphicon glyphicon-plus"></i> Carica nuovo farmaco</a>
+		</div>
+	 	<div class="panel-body">
+	 		<div class="table-responsive">
+		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
+			    	<tr ng-repeat="farmaco in $data | filter:query">
+				      	<td data-title="'Descrizione'" sortable="'descrizione'">{{farmaco.descrizione}}</td>
+				      	<td data-title="'Quantit&agrave; per pezzo'" sortable="'quantita_per_pezzo'">{{farmaco.quantita_per_pezzo}}</td>
+				      	<td data-title="''" class="text-center">
+				      		<button type="button" class="btn btn-warning" ng-click="dettaglio(farmaco.id)"><i class="glyphicon glyphicon-floppy-disk"></i> Modifica</button>
+				      		<button type="button" class="btn btn-danger" ng-click="cancella(farmaco.id)"><i class="glyphicon glyphicon-trash"></i> Cancella</button>
+				      	</td>
+			    	</tr>
+		      	</table>
+	      	</div>
+	    </div>
+	    <div class="panel-footer" align="center">
+	    	<a class="btn btn-warning" ng-href="farmaci.csv" >
+	    		<i class="glyphicon glyphicon-export"></i> CSV
+	    	</a>
+	    	<a class="btn btn-success" ng-href="farmaci.xls" >
+	    		<i class="glyphicon glyphicon-export"></i> Excel
+	    	</a>
+	    	<a class="btn btn-danger" ng-href="farmaci.pdf" >
+	    		<i class="glyphicon glyphicon-export"></i> PDF
+	    	</a>
+	    </div>
+	</div>
+</div>

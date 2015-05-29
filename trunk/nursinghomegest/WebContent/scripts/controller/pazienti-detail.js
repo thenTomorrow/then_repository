@@ -26,7 +26,7 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
     		controller: 'ModalInstanceCtrl',
     		resolve: {
     			body: function () {
-    				return 'Vuoi veramente cancellare il paziente?';
+    				return 'Vuoi veramente cancellare la scheda paziente?';
   	          	}
   		  	}
         });

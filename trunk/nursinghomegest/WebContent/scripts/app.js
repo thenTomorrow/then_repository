@@ -20,6 +20,18 @@ nursingHomeApp.config(['$routeProvider', function($routeProvider) {
 		templateUrl: 'partial/pazienti-detail.html',
 		controller: 'pazienti-detail'
 	}).
+	when('/farmaci', {
+		templateUrl: 'partial/farmaci-list.html',
+		controller: 'farmaci-list'
+	}).
+	when('/farmaci/new/', {
+		templateUrl: 'partial/farmaci-detail.html',
+		controller: 'farmaci-detail'
+	}).
+	when('/farmaci/:farmacoId', {
+		templateUrl: 'partial/farmaci-detail.html',
+		controller: 'farmaci-detail'
+	}).
 	otherwise({
 		redirectTo: '/pazienti'
 	});
