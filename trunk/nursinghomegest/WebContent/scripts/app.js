@@ -32,6 +32,18 @@ nursingHomeApp.config(['$routeProvider', function($routeProvider) {
 		templateUrl: 'partial/farmaci-detail.html',
 		controller: 'farmaci-detail'
 	}).
+	when('/somministrazioni', {
+		templateUrl: 'partial/somministrazioni-list.html',
+		controller: 'somministrazioni-list'
+	}).
+	when('/somministrazioni/new/', {
+		templateUrl: 'partial/somministrazioni-detail.html',
+		controller: 'somministrazioni-detail'
+	}).
+	when('/somministrazioni/:somministrazioneId', {
+		templateUrl: 'partial/somministrazioni-detail.html',
+		controller: 'somministrazioni-detail'
+	}).
 	when('/impostazioni', {
 		templateUrl: 'partial/impostazioni.html',
 		controller: 'impostazioni'

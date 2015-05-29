@@ -22,6 +22,8 @@
 		<script src="scripts/controller/pazienti-detail.js" ></script>
 		<script src="scripts/controller/farmaci-list.js" ></script>
 		<script src="scripts/controller/farmaci-detail.js" ></script>
+		<script src="scripts/controller/somministrazioni-list.js" ></script>
+		<script src="scripts/controller/somministrazioni-detail.js" ></script>
 		<script src="scripts/controller/impostazioni.js" ></script>
 		
 		<link href="css/bootstrap.min.css" rel="stylesheet">
