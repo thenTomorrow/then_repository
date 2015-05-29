@@ -1,0 +1,51 @@
+<div style="padding: 2px;">
+
+	<div class="panel panel-primary" style="padding: 2px;">
+		<div class="panel-heading">
+			<i class="glyphicon glyphicon-th-list"></i> Scadenze
+		</div>
+	 	<div class="panel-body">
+	 		<div class="table-responsive">
+		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
+			    	<tr ng-repeat="scadenza in $data | filter:query">
+				      	<td data-title="'Farmaco'" sortable="'farmaco'">{{scadenza.farmaco}}</td>
+				      	<td data-title="'Paziente'" sortable="'paziente'">{{scadenza.paziente}}</td>
+				      	<td data-title="'Giorni rimantenti'" sortable="'giorni_rimanenti'">
+				      		<span ng-show="scadenza.giorni_rimanenti>=0">
+				      			{{scadenza.giorni_rimanenti}} giorni rimanenti
+				      		</span>
+				      		<span ng-show="scadenza.giorni_rimanenti<0">
+				      			nessun giorno rimanente
+				      		</span>
+				      	</td>
+				      	<td data-title="'Stato'">
+				      		<span ng-show="scadenza.giorni_rimanenti>numeroGiorni" class="label label-primary">
+				      			OK
+				      		</span>
+				      		<span ng-show="scadenza.giorni_rimanenti>0 && scadenza.giorni_rimanenti<=numeroGiorni" class="label label-warning">
+				      			IN SCADENZA
+				      		</span>
+				      		<span ng-show="scadenza.giorni_rimanenti==0" class="label label-danger">
+				      			SCADUTE OGGI
+				      		</span>
+				      		<span ng-show="scadenza.giorni_rimanenti<0" class="label label-danger">
+				      			SCADUTE
+				      		</span>
+				      	</td>
+			    	</tr>
+		      	</table>
+	      	</div>
+	    </div>
+	    <div class="panel-footer" align="center">
+	    	<a class="btn btn-warning" ng-href="scadenze.csv" >
+	    		<i class="glyphicon glyphicon-export"></i> CSV
+	    	</a>
+	    	<a class="btn btn-success" ng-href="scadenze.xls" >
+	    		<i class="glyphicon glyphicon-export"></i> Excel
+	    	</a>
+	    	<a class="btn btn-danger" ng-href="scadenze.pdf" >
+	    		<i class="glyphicon glyphicon-export"></i> PDF
+	    	</a>
+	    </div>
+	</div>
+</div>

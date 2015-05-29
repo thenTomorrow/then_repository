@@ -8,7 +8,6 @@ nursingHomeApp.controller('impostazioni', ['$scope', '$http', '$window',
 	$scope.emailScadenze;
 	$scope.numeroGiorni;
 	
-    
 	$http.get('impostazioni/email_scadenze').success(function(data) {
 		if(data!=''){
 			$scope.emailScadenze = data;
