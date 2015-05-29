@@ -79,7 +79,7 @@ class ImpostazioniController {
 	}
 	
 	@RequestMapping(value="/impostazioni",  method = RequestMethod.POST)
-	public @ResponseBody Object insert(@RequestBody Object impostazione) throws Exception {
+	public @ResponseBody Object insertOrUpdate(@RequestBody Object impostazione) throws Exception {
 		
 		 sqlService.withSql { sql ->
 			sql.execute("""INSERT INTO impostazioni (nome, valore) VALUES(${impostazione.nome}, ${impostazione.valore}) ON DUPLICATE KEY UPDATE    
