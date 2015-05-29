@@ -21,6 +21,7 @@
 		<script src="scripts/controller/pazienti-detail.js" ></script>
 		<script src="scripts/controller/farmaci-list.js" ></script>
 		<script src="scripts/controller/farmaci-detail.js" ></script>
+		<script src="scripts/controller/impostazioni.js" ></script>
 		
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/bootstrap-theme.min.css" rel="stylesheet">
@@ -72,10 +73,9 @@
 		</center>
 		<div style="padding: 2px;" ng-view ng-show="!loadingRoot"></div>
 		<div class="footer">
-	    	<div class="container">
+	    	<div class="container" style="text-align: center;">
 	        	<p class="text-muted">Residenza per anziani Maria Madre della Fiducia</p>
-	        	<p class="text-muted">Contrada Scaro 1 - 97016 Pozzallo (RG)</p>
-	        	<p class="text-muted">Via Unita' D'Italia 932 - 97016 Pozzallo (RG)</p>
+	        	<p class="text-muted">Contrada Scaro 1 - 97016 Pozzallo (RG) | Via Unita' D'Italia 932 - 97016 Pozzallo (RG)</p>
 	        	<p class="text-muted">© Tutti i diritti riservati</p>
 	      	</div>
 	    </div>

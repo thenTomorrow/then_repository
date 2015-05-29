@@ -9,7 +9,7 @@
 		<script src="js/jquery-2.1.4.min.js" ></script>
 		<script src="js/angular.min.js" ></script>
 		<script src="js/angular-route.min.js" ></script>
-		<script src="js/ui-bootstrap-tpls-0.13.0.min.js" ></script>
+		<script src="js/ui-bootstrap-tpls-0.12.0.min.js" ></script>
 		
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/bootstrap-theme.min.css" rel="stylesheet">
