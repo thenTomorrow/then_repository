@@ -36,13 +36,13 @@
 					      	<div class="form-group">
 							   	<label for="nome" class="col-md-2 control-label">Nome</label>
 							   	<div class="col-md-4">
-							    	<input type="text" id="nome" ng-model="paziente.nome" class="form-control"/>
+							    	<input type="text" name="nome" id="nome" ng-model="paziente.nome" class="form-control" required/>
 							    </div>
 						    </div>
 					      	<div class="form-group">
 							   	<label for="cognome" class="col-md-2 control-label">Cognome</label>
 							   	<div class="col-md-4">
-							    	<input type="text" id="cognome" ng-model="paziente.cognome" class="form-control"/>
+							    	<input type="text" name="cognome" id="cognome" ng-model="paziente.cognome" class="form-control" required/>
 							    </div>
 						    </div>
 						</accordion-group>    
@@ -54,7 +54,7 @@
 			     			<i class="glyphicon glyphicon-arrow-left"></i>
 			     			Indietro
 			     		</a>
-			     		<button class="btn btn-success" type="submit" ng-click="save()">
+			     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="pazienteForm.nome.$invalid || pazienteForm.cognome.$invalid">
 			     			<i class="glyphicon glyphicon-floppy-disk"></i>
 			     			Salva
 			     		</button>
