@@ -74,7 +74,7 @@ class PazientiController {
 	@RequestMapping(value="/pazienti", method = RequestMethod.GET)
 	public @ResponseBody Object getPazienti(){
 		sqlService.withSql { sql ->
-			return sql.rows("select id, nome, cognome from paziente")
+			return sql.rows("select id, nome, cognome from paziente order by nome, cognome")
 		}
 	}
 	

@@ -6,7 +6,7 @@ nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', 
 	$scope.alertOK = '';
 	$scope.isOpenDatiFarmaco = true;
 	$scope.alertKO = '';
-	$scope.farmaco = {quantita_per_pezzo:1};
+	$scope.farmaco = {quantita_per_pezzo:12};
 	
     if($routeParams.farmacoId!=null && $routeParams.farmacoId!=''){
     	$http.get('farmaci/'+$routeParams.farmacoId).success(function(data) {

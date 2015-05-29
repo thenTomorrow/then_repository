@@ -56,7 +56,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 @Log4j
 @Controller
-class FarmaciController {
+class SomministrazioniController {
 	
 	@Resource(name="ds")
 	private DataSource dataSource
@@ -64,67 +64,79 @@ class FarmaciController {
 	@Resource(name="sqlService")
 	private SqlService sqlService
 			
-	@RequestMapping(value="/farmaci/{id}", method = RequestMethod.GET)
-	public @ResponseBody Object getFarmaco(@PathVariable("id") Integer id) {
+	@RequestMapping(value="/somministrazioni/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object getSomministrazione(@PathVariable("id") Integer id) {
 		sqlService.withSql { sql ->
-			return sql.firstRow("select id, descrizione, quantita_per_pezzo from farmaco where id = ${id}")
+			return sql.firstRow("""select id, farmaco_id, paziente_id, quantita, data_inserimento 
+								   from somministrazione 
+								   where id = ${id}""")
 		}
 	}
 	
-	@RequestMapping(value="/farmaci", method = RequestMethod.GET)
-	public @ResponseBody Object getFarmaci(){
+	@RequestMapping(value="/somministrazioni", method = RequestMethod.GET)
+	public @ResponseBody Object getSomministrazioni(){
 		sqlService.withSql { sql ->
-			return sql.rows("select id, descrizione, quantita_per_pezzo from farmaco order by descrizione")
+			return sql.rows("""select somministrazione.id, 
+									  farmaco.descrizione as farmaco,
+									  concat(paziente.nome,' ',paziente.cognome) as paziente,
+									  somministrazione.quantita, 
+									  DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento 	
+							   from somministrazione
+							   inner join paziente on paziente.id = somministrazione.paziente_id
+							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
+							   order by somministrazione.data_inserimento desc""")
 		}
 	}
 	
-	@RequestMapping(value="/farmaci.csv", method = RequestMethod.GET)
+	@RequestMapping(value="/somministrazioni.csv", method = RequestMethod.GET)
 	public void getFarmaciCsv(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getFarmaci()), "farmaci."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getSomministrazioni()), "somministrazioni."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
-	@RequestMapping(value="/farmaci.xls", method = RequestMethod.GET)
+	@RequestMapping(value="/somministrazioni.xls", method = RequestMethod.GET)
 	public void getFarmaciXls(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getFarmaci()), "farmaci."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getSomministrazioni()), "somministrazioni."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
-	@RequestMapping(value="/farmaci.pdf", method = RequestMethod.GET)
+	@RequestMapping(value="/somministrazioni.pdf", method = RequestMethod.GET)
 	public void getFarmaciPdf(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getFarmaci()), "farmaci."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getSomministrazioni()), "somministrazioni."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
-	@RequestMapping(value="/farmaci",  method = RequestMethod.PUT)
-	public @ResponseBody Object insert(@RequestBody Object farmaco) throws Exception {
+	@RequestMapping(value="/somministrazioni",  method = RequestMethod.PUT)
+	public @ResponseBody Object insert(@RequestBody Object somministrazione) throws Exception {
 		sqlService.withSql { sql ->
 			
-			def res = sql.executeInsert("""INSERT INTO farmaco(descrizione,quantita_per_pezzo)
-									       VALUES(${farmaco.descrizione},${farmaco.quantita_per_pezzo})""")
+			def res = sql.executeInsert("""INSERT INTO somministrazione(farmaco_id,paziente_id,quantita,data_inserimento)
+									       VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},${somministrazione.data_inserimento})""")
 			def id = (res[0][0]).intValue()
-			return getFarmaco(id)
+			return getSomministrazione(id)
 		}
 	}
 	
-	@RequestMapping(value="/farmaci/{id}",  method = RequestMethod.POST)
-	public @ResponseBody Object edit(@PathVariable("id") Integer id, @RequestBody Object farmaco) throws Exception {
+	@RequestMapping(value="/somministrazioni/{id}",  method = RequestMethod.POST)
+	public @ResponseBody Object edit(@PathVariable("id") Integer id, @RequestBody Object somministrazione) throws Exception {
 		sqlService.withSql { sql ->
 		
-			def res = sql.executeUpdate("""UPDATE farmaco 
-									       SET descrizione = ${farmaco.descrizione},
-										   	   quantita_per_pezzo = ${farmaco.quantita_per_pezzo}
+			def res = sql.executeUpdate("""UPDATE somministrazione 
+									       SET farmaco_id = ${somministrazione.farmaco_id},
+										   	   paziente_id = ${somministrazione.paziente_id},
+											   quantita = ${somministrazione.quantita},
+											   data_inserimento = ${somministrazione.data_inserimento}
 										   WHERE id = ${id} """)			
 		}
-		return getFarmaco(id)
+		return getSomministrazione(id)
 	}
 	
-	@RequestMapping(value="/farmaci/{id}",  method = RequestMethod.DELETE)
+	@RequestMapping(value="/somministrazioni/{id}",  method = RequestMethod.DELETE)
 	public @ResponseBody Object delete(@PathVariable("id") Integer id) throws Exception {
-		def farmaco = getFarmaco(id)
+		def somministrazione = getSomministrazione(id)
 		sqlService.withSql { sql ->
-			sql.execute("""DELETE FROM farmaco WHERE id = ${id}""")
-			return farmaco
+			sql.execute("""DELETE FROM somministrazione WHERE id = ${id}""")
+			return somministrazione
 		}
 	}
 }

@@ -1,0 +1,88 @@
+<div style="padding: 2px;">
+
+	<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3>Attenzione</h3>
+        </div>
+        <div class="modal-body">
+            {{body}}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">
+				<i class="glyphicon glyphicon-ok"></i>
+				OK
+			</button>
+            <button class="btn btn-warning" ng-click="cancel()">
+				<i class="glyphicon glyphicon-ban-circle"></i>
+				Annulla
+			</button>
+        </div>
+    </script>
+
+	<div class="panel panel-primary" style="padding: 2px;">
+		<div class="panel-heading" ng-show="somministrazione.id!=null">
+			<h5>Somministrazione:</h5> 
+		</div>		
+		<div class="panel-heading" ng-show="somministrazione.id==null">
+			<h5>Nuova somministrazione:</h5> 
+		</div>		
+		<div class="panel-body">
+			<alert ng-show="alertOK!=''" type="success" close="alertOK=''" >{{alertOK}}</alert>		
+			<alert ng-show="alertKO!=''" type="danger" close="alertKO=''" >{{alertKO}}</alert>		
+			<form class="form-horizontal" role="form" name="somministrazioneForm" novalidate>
+				<div ng-controller="AccordionCtrl">
+					<accordion close-others="false">
+					  	<accordion-group heading="Dati" is-open="isOpenDatiSomministrazione">
+					      	<div class="form-group">
+							   	<label for="farmaco_id" class="col-md-2 control-label">Farmaco</label>
+							   	<div class="col-md-4">
+							    	<select name="farmaco_id" id="farmaco_id" ng-model="somministrazione.farmaco_id" class="form-control" required>
+							    		<option ng-repeat="farmaco in farmaci" ng-selected='somministrazione.farmaco_id==farmaco.id' ng-option="farmaco.id" value="{{farmaco.id}}">{{farmaco.descrizione}}</option>
+							    	</select>
+							    </div>
+						    </div>
+						    <div class="form-group">
+							   	<label for="paziente_id" class="col-md-2 control-label">Paziente</label>
+							   	<div class="col-md-4">
+							    	<select name="paziente_id" id="paziente_id" ng-model="somministrazione.paziente_id" class="form-control" required>
+							    		<option ng-repeat="paziente in pazienti" ng-selected='somministrazione.paziente_id==paziente.id' ng-option="paziente.id" value="{{paziente.id}}">{{paziente.nome}} {{paziente.cognome}}</option>
+							    	</select>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="quantita" class="col-md-2 control-label">Quantit&agrave; giornaliera</label>
+							   	<div class="col-md-4">
+							    	<input type="number" name="quantita" id="quantita" ng-model="somministrazione.quantita" class="form-control" required/>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="data" class="col-md-2 control-label">Data</label>
+							   	<div class="col-md-4">
+							    	<input type="date" name="data" id="data" ng-model="somministrazione.data_inserimento" class="form-control" required/>
+							    </div>
+						    </div>
+						</accordion-group>    
+					</accordion>
+				</div>
+			    <div class="row">
+			    	<div class="col-md-8">
+			     		<a class="btn btn-primary" href="#/somministrazioni">
+			     			<i class="glyphicon glyphicon-arrow-left"></i>
+			     			Indietro
+			     		</a>
+			     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="somministrazioneForm.quantita.$invalid || somministrazioneForm.data_inserimento.$invalid || somministrazioneForm.farmaco_id.$invalid || somministrazioneForm.paziente_id.$invalid">
+			     			<i class="glyphicon glyphicon-floppy-disk"></i>
+			     			Salva
+			     		</button>
+			     		<button class="btn btn-danger" ng-show="somministrazione.id!=null" ng-click="open()" >
+			     			<i class="glyphicon glyphicon-trash"></i>
+			     			Cancella
+			     		</button>
+			     	</div>	
+			    </div>
+			</form>	
+		</div>
+	</div>
+</div>
+	
+	
