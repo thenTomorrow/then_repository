@@ -5,7 +5,7 @@ nursingHomeApp.controller('pazienti-list', ['$scope', '$http', '$location', '$fi
 	
 	$rootScope.loadingRoot = true;
 	
-    $http.get('pazienti/')
+    $http.get('pazientiAll/')
 	.success(function(data) {
 	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter);
 	    $rootScope.loadingRoot = false;
@@ -16,20 +16,20 @@ nursingHomeApp.controller('pazienti-list', ['$scope', '$http', '$location', '$fi
     	$location.path('/pazienti/'+id);
     };
     
-    $scope.cancella = function (id) {
+    $scope.disabilita = function (id) {
     	
     	var modalInstance = $modal.open({
     		templateUrl: 'myModalContent.html',
     		controller: 'ModalInstanceCtrl',
     		resolve: {
     			body: function () {
-    				return 'Vuoi veramente cancellare la scheda paziente?';
+    				return 'Vuoi veramente disabilitare la scheda paziente?';
   	          	}
   		  	}
         });
 
     	modalInstance.result.then(function (selectedItem) {
-    		$http['delete']('pazienti/'+id).success(function(data){
+    		$http['delete']('pazienti/'+id+'/disabilita').success(function(data){
     			$window.location.reload();
 	     	});
 	    }, function () {
@@ -37,4 +37,32 @@ nursingHomeApp.controller('pazienti-list', ['$scope', '$http', '$location', '$fi
 	    });
     };
     
+    $scope.riabilita = function (id) {
+    	
+    	var modalInstance = $modal.open({
+    		templateUrl: 'myModalContent.html',
+    		controller: 'ModalInstanceCtrl',
+    		resolve: {
+    			body: function () {
+    				return 'Vuoi veramente riabilitare la scheda paziente?';
+    			}
+    		}
+    	});
+    	
+    	modalInstance.result.then(function (selectedItem) {
+    		$http['delete']('pazienti/'+id+'/riabilita').success(function(data){
+    			$window.location.reload();
+    		});
+    	}, function () {
+    		
+    	});
+    };
+    
+    $scope.selectedStato = 'PRESENTE';
+    $scope.cercaStato=function(newStato){
+    	if(newStato!='')
+    		$scope.selectedStato=newStato;
+    	else
+    		$scope.selectedStato=null;
+    };
 }]);

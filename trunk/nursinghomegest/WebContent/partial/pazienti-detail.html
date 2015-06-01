@@ -45,6 +45,48 @@
 							    	<input type="text" name="cognome" id="cognome" ng-model="paziente.cognome" class="form-control" required/>
 							    </div>
 						    </div>
+					      	<div class="form-group">
+							   	<label for="cf" class="col-md-2 control-label">Codice Fiscale</label>
+							   	<div class="col-md-4">
+							    	<input type="text" name="cf" id="cf" ng-model="paziente.cf" class="form-control" maxlength="16"/>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="comune_nascita" class="col-md-2 control-label">Comune di Nascita</label>
+							   	<div class="col-md-4">
+							    	<input type="text" name="comune_nascita" id="comune_nascita" ng-model="paziente.comune_nascita" class="form-control"/>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="data_nascita" class="col-md-2 control-label">Data di Nascita</label>
+							   	<div class="col-md-4">
+							    	<input type="date" name="data_nascita" id="data_nascita" ng-model="paziente.data_nascita" class="form-control"/>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="comune_residenza" class="col-md-2 control-label">Comune di Residenza</label>
+							   	<div class="col-md-4">
+							    	<input type="text" name="comune_residenza" id="comune_residenza" ng-model="paziente.comune_residenza" class="form-control"/>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="indirizzo_residenza" class="col-md-2 control-label">Indirizzo di Residenza</label>
+							   	<div class="col-md-4">
+							    	<input type="text" name="indirizzo_residenza" id="indirizzo_residenza" ng-model="paziente.indirizzo_residenza" class="form-control"/>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="medico_curante" class="col-md-2 control-label">Medico Curante</label>
+							   	<div class="col-md-4">
+							    	<input type="text" name="medico_curante" id="medico_curante" ng-model="paziente.medico_curante" class="form-control"/>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="esenzione_ticket" class="col-md-2 control-label">Esenzione Ticket</label>
+							   	<div class="col-md-4">
+							    	<input type="text" name="esenzione_ticket" id="esenzione_ticket" ng-model="paziente.esenzione_ticket" class="form-control"/>
+							    </div>
+						    </div>
 						</accordion-group>    
 					</accordion>
 				</div>
@@ -58,9 +100,13 @@
 			     			<i class="glyphicon glyphicon-floppy-disk"></i>
 			     			Salva
 			     		</button>
-			     		<button class="btn btn-danger" ng-show="paziente.id!=null" ng-click="open()" >
+			     		<button class="btn btn-danger" ng-show="paziente.id!=null && !paziente.disabilitato" ng-click="open()" >
 			     			<i class="glyphicon glyphicon-trash"></i>
-			     			Cancella
+			     			Disabilita
+			     		</button>
+			     		<button type="button" class="btn btn-primary" ng-click="riabilita()" ng-show="paziente.id!=null && paziente.disabilitato">
+			     			<i class="glyphicon glyphicon-play"></i> 
+			     			Riabilita
 			     		</button>
 			     	</div>	
 			    </div>

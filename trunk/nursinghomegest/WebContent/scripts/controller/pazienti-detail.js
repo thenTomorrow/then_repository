@@ -26,18 +26,39 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
     		controller: 'ModalInstanceCtrl',
     		resolve: {
     			body: function () {
-    				return 'Vuoi veramente cancellare la scheda paziente?';
+    				return 'Vuoi veramente disabilitare la scheda paziente?';
   	          	}
   		  	}
         });
 
     	modalInstance.result.then(function (selectedItem) {
-    		$http['delete']('pazienti/'+pazienteId).success(function(data){
+    		$http['delete']('pazienti/'+pazienteId+'/disabilita').success(function(data){
     			$location.path('/pazienti');
 	     	});
 	    }, function () {
 	    	
 	    });
+    };
+    
+    $scope.riabilita = function () {
+    	var pazienteId = $scope.paziente.id;
+    	var modalInstance = $modal.open({
+    		templateUrl: 'myModalContent.html',
+    		controller: 'ModalInstanceCtrl',
+    		resolve: {
+    			body: function () {
+    				return 'Vuoi veramente riabilitare la scheda paziente?';
+    			}
+    		}
+    	});
+    	
+    	modalInstance.result.then(function (selectedItem) {
+    		$http['delete']('pazienti/'+pazienteId+'/riabilita').success(function(data){
+    			$location.path('/pazienti');
+    		});
+    	}, function () {
+    		
+    	});
     };
     
     $scope.save = function(){
