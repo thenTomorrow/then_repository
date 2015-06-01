@@ -52,7 +52,7 @@
 	        		<ul class="nav navbar-nav" ng-click="navCollapsed=true" ng-controller="HeaderController">
 		            	<li ng-class="{active:($location.path().indexOf('/pazienti')!=-1)}"><a href="#pazienti"><i class="glyphicon glyphicon-user"></i> <span class="menu-item">Pazienti</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/farmaci')!=-1)}"><a href="#farmaci"><i class="glyphicon glyphicon-inbox"></i> <span class="menu-item">Farmaci</span></a></li>
-		            	<li ng-class="{active:($location.path().indexOf('/somministrazioni')!=-1)}"><a href="#somministrazioni"><i class="glyphicon glyphicon-check"></i> <span class="menu-item">Somministrazioni</span></a></li>
+		            	<li ng-class="{active:($location.path().indexOf('/somministrazioni')!=-1)}"><a href="#somministrazioni"><i class="glyphicon glyphicon-hand-right"></i> <span class="menu-item">Somministrazioni</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/esami')!=-1)}"><a href="#esami"><i class="glyphicon glyphicon-check"></i> <span class="menu-item">Esami</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/reports')!=-1)}"><a href="#reports"><i class="glyphicon glyphicon-th-list"></i> <span class="menu-item">Reports</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/impostazioni')!=-1)}"><a href="#impostazioni"><i class="glyphicon glyphicon-cog"></i> <span class="menu-item">Impostazioni</span></a></li>
