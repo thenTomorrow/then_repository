@@ -67,14 +67,61 @@ class PazientiController {
 	@RequestMapping(value="/pazienti/{id}", method = RequestMethod.GET)
 	public @ResponseBody Object getPaziente(@PathVariable("id") Integer id) {
 		sqlService.withSql { sql ->
-			return sql.firstRow("select id, nome, cognome from paziente where id = ${id}")
+			return sql.firstRow("""select id, 
+										  nome, 
+										  cognome,
+										  cf, 
+										  comune_nascita, 
+										  data_nascita,
+										  comune_residenza,
+										  indirizzo_residenza,
+										  medico_curante,
+										  esenzione_ticket,
+										  disabilitato,
+										  if(disabilitato=0,'PRESENTE','ASSENTE') stato 
+								   from paziente 
+								   where id = ${id}""")
 		}
 	}
 	
 	@RequestMapping(value="/pazienti", method = RequestMethod.GET)
 	public @ResponseBody Object getPazienti(){
 		sqlService.withSql { sql ->
-			return sql.rows("select id, nome, cognome from paziente order by nome, cognome")
+			return sql.rows("""select id, 
+									  nome, 
+									  cognome,
+									  cf, 
+									  comune_nascita, 
+									  DATE_FORMAT(data_nascita,'%d/%m/%Y') data_nascita,
+									  comune_residenza,
+									  indirizzo_residenza,
+									  medico_curante,
+									  esenzione_ticket,
+									  disabilitato,
+									  if(disabilitato=0,'PRESENTE','ASSENTE') stato
+							   from paziente 
+							   where disabilitato = 0 
+							   order by nome, cognome""")
+		}
+	}
+	
+	@RequestMapping(value="/pazientiAll", method = RequestMethod.GET)
+	public @ResponseBody Object getPazientiAll(){
+		sqlService.withSql { sql ->
+		return sql.rows("""select id, 
+								  nome, 
+								  cognome,
+								  cf, 
+								  comune_nascita, 
+								  DATE_FORMAT(data_nascita,'%d/%m/%Y') data_nascita,
+								  comune_residenza,
+								  indirizzo_residenza,
+								  medico_curante,
+								  esenzione_ticket,
+								  disabilitato,
+								  if(disabilitato=0,'PRESENTE','ASSENTE') stato
+						   from paziente 
+						   order by nome, cognome""")
 		}
 	}
 	
@@ -100,8 +147,8 @@ class PazientiController {
 	public @ResponseBody Object insert(@RequestBody Object paziente) throws Exception {
 		sqlService.withSql { sql ->
 			
-			def res = sql.executeInsert("""INSERT INTO paziente(nome,cognome)
-									       VALUES(${paziente.nome},${paziente.cognome})""")
+			def res = sql.executeInsert("""INSERT INTO paziente(nome,cognome,cf,comune_nascita,data_nascita,comune_residenza,indirizzo_residenza,medico_curante,esenzione_ticket)
+									       VALUES(${paziente.nome},${paziente.cognome},${paziente.cf},${paziente.comune_nascita},${paziente.data_nascita},${paziente.comune_residenza},${paziente.indirizzo_residenza},${paziente.medico_curante},${paziente.esenzione_ticket})""")
 			def id = (res[0][0]).intValue()
 			return getPaziente(id)
 		}
@@ -113,18 +160,38 @@ class PazientiController {
 		
 			def res = sql.executeUpdate("""UPDATE paziente 
 									       SET nome = ${paziente.nome},
-										   	   cognome = ${paziente.cognome}
+										   	   cognome = ${paziente.cognome},
+											   cf = ${paziente.cf}, 
+											   comune_nascita = ${paziente.comune_nascita}, 
+											   data_nascita = ${paziente.data_nascita},
+											   comune_residenza = ${paziente.comune_residenza},
+											   indirizzo_residenza = ${paziente.indirizzo_residenza},
+											   medico_curante = ${paziente.medico_curante},
+											   esenzione_ticket = ${paziente.esenzione_ticket}
 										   WHERE id = ${id} """)			
 		}
 		return getPaziente(id)
 	}
 	
-	@RequestMapping(value="/pazienti/{id}",  method = RequestMethod.DELETE)
-	public @ResponseBody Object delete(@PathVariable("id") Integer id) throws Exception {
-		def paziente = getPaziente(id)
+	@RequestMapping(value="/pazienti/{id}/disabilita",  method = RequestMethod.DELETE)
+	public @ResponseBody Object disabilita(@PathVariable("id") Integer id) throws Exception {
 		sqlService.withSql { sql ->
-			sql.execute("""DELETE FROM paziente WHERE id = ${id}""")
-			return paziente
+		
+			def res = sql.executeUpdate("""UPDATE paziente 
+									       SET disabilitato = 1
+										   WHERE id = ${id} """)			
 		}
+		return getPaziente(id)
+	}
+	
+	@RequestMapping(value="/pazienti/{id}/riabilita",  method = RequestMethod.DELETE)
+	public @ResponseBody Object riabilita(@PathVariable("id") Integer id) throws Exception {
+		sqlService.withSql { sql ->
+		
+		def res = sql.executeUpdate("""UPDATE paziente 
+									   SET disabilitato = 0
+									   WHERE id = ${id} """)			
+		}
+		return getPaziente(id)
 	}
 }

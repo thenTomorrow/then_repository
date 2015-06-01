@@ -84,6 +84,7 @@ class SomministrazioniController {
 							   from somministrazione
 							   inner join paziente on paziente.id = somministrazione.paziente_id
 							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
+							   where paziente.disabilitato = 0
 							   order by somministrazione.data_inserimento desc""")
 		}
 	}
