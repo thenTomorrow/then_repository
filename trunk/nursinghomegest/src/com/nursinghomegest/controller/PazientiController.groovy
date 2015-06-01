@@ -188,9 +188,9 @@ class PazientiController {
 	public @ResponseBody Object riabilita(@PathVariable("id") Integer id) throws Exception {
 		sqlService.withSql { sql ->
 		
-		def res = sql.executeUpdate("""UPDATE paziente 
-									   SET disabilitato = 0
-									   WHERE id = ${id} """)			
+			def res = sql.executeUpdate("""UPDATE paziente 
+									   	   SET disabilitato = 0
+									       WHERE id = ${id} """)			
 		}
 		return getPaziente(id)
 	}
