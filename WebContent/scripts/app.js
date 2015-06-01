@@ -44,6 +44,18 @@ nursingHomeApp.config(['$routeProvider', function($routeProvider) {
 		templateUrl: 'partial/somministrazioni-detail.html',
 		controller: 'somministrazioni-detail'
 	}).
+	when('/esami', {
+		templateUrl: 'partial/esami-list.html',
+		controller: 'esami-list'
+	}).
+	when('/esami/new/', {
+		templateUrl: 'partial/esami-detail.html',
+		controller: 'esami-detail'
+	}).
+	when('/esami/:esameId', {
+		templateUrl: 'partial/esami-detail.html',
+		controller: 'esami-detail'
+	}).
 	when('/reports', {
 		templateUrl: 'partial/reports.html',
 		controller: 'reports'

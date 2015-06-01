@@ -1,0 +1,113 @@
+<div style="padding: 2px;">
+
+	<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3>Attenzione</h3>
+        </div>
+        <div class="modal-body">
+            {{body}}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">
+				<i class="glyphicon glyphicon-ok"></i>
+				OK
+			</button>
+            <button class="btn btn-warning" ng-click="cancel()">
+				<i class="glyphicon glyphicon-ban-circle"></i>
+				Annulla
+			</button>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="modalCarousel.html">
+		<carousel interval="myInterval" style="position: relative;">
+			<div class="carousel-caption-custom">				
+				<button class="btn btn-success" value="Chiudi" ng-click="ok()">
+					<i class="glyphicon glyphicon-remove"></i>
+				</button>	
+			</div>
+			<slide>
+				<img ng-src="esami/{{file.id}}/img" style="margin:auto;" />
+			</slide>
+		</carousel>
+    </script>
+
+	<div class="panel panel-primary" style="padding: 2px;">
+		<div class="panel-heading" ng-show="esame.id!=null">
+			<h5>Dettaglio esame: <b>{{esame.descrizione}}</b></h5> 
+		</div>		
+		<div class="panel-heading" ng-show="esame.id==null">
+			<h5>Nuovo esame:</h5> 
+		</div>		
+		<div class="panel-body">
+			<alert ng-show="alertOK!=''" type="success" close="alertOK=''" >{{alertOK}}</alert>		
+			<alert ng-show="alertKO!=''" type="danger" close="alertKO=''" >{{alertKO}}</alert>		
+			<form class="form-horizontal" role="form" name="esameForm" novalidate>
+				<div ng-controller="AccordionCtrl">
+					<accordion close-others="false">
+					  	<accordion-group heading="Info Esame" is-open="isOpenInfo">
+					      	<div class="form-group">
+							   	<label for="paziente_id" class="col-md-2 control-label">Paziente</label>
+							   	<div class="col-md-4">
+							    	<select name="paziente_id" id="paziente_id" ng-model="esame.paziente_id" class="form-control" required>
+							    		<option ng-repeat="paziente in pazienti" ng-selected='esame.paziente_id==paziente.id' ng-option="paziente.id" value="{{paziente.id}}">{{paziente.nome}} {{paziente.cognome}}</option>
+							    	</select>
+							    </div>
+						    </div>
+					      	<div class="form-group">
+							   	<label for="descrizione" class="col-md-2 control-label">Descrizione</label>
+							   	<div class="col-md-4">
+							    	<textarea id="descrizione" ng-model="esame.descrizione" class="form-control"></textarea>
+							    </div>
+						    </div>
+						    <div class="form-group">
+							   	<label for="data" class="col-md-2 control-label">Data</label>
+							   	<div class="col-md-4">
+							    	<input type="date" name="data" id="data" ng-model="esame.data" class="form-control" required/>
+							    </div>
+						    </div>
+						</accordion-group>    
+						<accordion-group heading="Caricamento Esame" is-open="isFileDaCaricare" ng-show="esame.id!=null"> 
+						    <alert ng-show="alertFileOK!=''" type="success" close="alertFileOK=''" >{{alertFileOK}}</alert>		
+							<alert ng-show="alertFileKO!=''" type="danger" close="alertFileKO=''" >{{alertFileKO}}</alert>		
+							<div class="form-group">
+					    		&nbsp;&nbsp;&nbsp;
+					    		<label for="file" class="control-label btn btn-success fileinput-button">
+					  		 		<i class="glyphicon glyphicon-plus"></i>
+					  		 		Carica esame...
+					  		 	</label>
+					  		 	<input id="file" ng-show="false" class="col-md-3 control-label" type="file" name="file" onchange="angular.element(this).scope().addImg(this.files)" accept="image/*"/>
+					  		</div>
+					  		<br/>
+					    	<div class="col-sm-6 col-md-3 thumbnails thumbnails-container" ng-show="imgPreview!=null && imgPreview.mime_type!=null">
+						        <a class="thumbnail" ng-click="openCarousel(imgPreview)" 
+						           onmouseover="document.body.style.cursor = '-moz-zoom-in';document.body.style.cursor = '-webkit-zoom-in';"
+						           onmouseout="document.body.style.cursor = 'default';">
+							       <img ng-src="esami/{{imgPreview.id}}/img?thumb&r={{random}}" style="width:200px;height:150px;"/>
+						        </a>
+						    </div>
+					  	</accordion-group>
+					</accordion>
+				</div>
+			    <div class="row">
+			    	<div class="col-md-4">
+			     		<a class="btn btn-primary" href="#/esami">
+			     			<i class="glyphicon glyphicon-arrow-left"></i>
+			     			Indietro
+			     		</a>
+			     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="esameForm.descrizione.$invalid || esameForm.data.$invalid || esameForm.paziente_id.$invalid">
+			     			<i class="glyphicon glyphicon-floppy-disk"></i>
+			     			Salva
+			     		</button>
+			     		<button class="btn btn-danger" ng-show="esame.id!=null" ng-click="open()" >
+			     			<i class="glyphicon glyphicon-trash"></i>
+			     			Cancella
+			     		</button>
+			     	</div>	
+			    </div>
+			</form>	
+		</div>
+	</div>
+</div>
+	
+	
