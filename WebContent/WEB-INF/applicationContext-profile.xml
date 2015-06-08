@@ -28,4 +28,9 @@
 		<property name="defaultReadOnly" value="false"/>
 	</bean>
 	      	
+	<bean id="mailService" class="com.nursinghomegest.util.ClientMail">    
+    	<property name="mailHost" value="smtps.aruba.it" /> 
+    	<property name="mailPort" value="465" />  
+    </bean>
+	
 </beans>

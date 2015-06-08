@@ -39,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lowagie.text.pdf.PdfWriter;
+import com.nursinghomegest.service.ImpostazioniService;
 import com.nursinghomegest.service.SqlService;
 import com.nursinghomegest.util.ControllerUtil;
 import com.nursinghomegest.util.ExportUtil;
@@ -66,16 +67,12 @@ class ImpostazioniController {
 	@Resource(name="sqlService")
 	private SqlService sqlService
 	
+	@Resource(name="impostazioniService")
+	private ImpostazioniService impostazioniService
+	
 	@RequestMapping(value="/impostazioni/{nome}", method = RequestMethod.GET)
 	public @ResponseBody Object getImpostazione(@PathVariable("nome") String nome) {
-		Object impostazione
-		sqlService.withSql { sql ->
-			impostazione = sql.firstRow("select nome, valore from impostazioni where nome = ${nome}")
-		}
-		if(impostazione!=null)
-			return impostazione.valore
-		else 
-			return null
+		return impostazioniService.getImpostazione(nome)
 	}
 	
 	@RequestMapping(value="/impostazioni",  method = RequestMethod.POST)

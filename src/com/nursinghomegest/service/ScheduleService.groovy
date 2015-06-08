@@ -1,32 +1,36 @@
 package com.nursinghomegest.service
 
+import com.nursinghomegest.service.MailService;
+
 import groovy.sql.Sql
 
 import javax.sql.DataSource;
 import javax.annotation.Resource
 
+import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import com.nursinghomegest.service.SqlService;
+import com.nursinghomegest.util.mail.MailBuilder
 
 @Service("scheduleService")
 class ScheduleService {
 	
+	private static Logger logger = Logger.getLogger(ScheduleService.class)
+	
 	@Resource(name="sqlService")
 	private SqlService sqlService
+	@Resource(name="impostazioniService")
+	private ImpostazioniService impostazioniService
+	@Resource
+	private MailService mailService
 	
 	@Scheduled(cron="0 31 15 * * ?")
 	public void scadenze() {
 		
-		String giorniPreavviso = null
-		Object impostazione
-		sqlService.withSql { sql ->
-			impostazione = sql.firstRow("select nome, valore from impostazioni where nome = 'numero_giorni'")
-		}
-		if(impostazione!=null)
-			giorniPreavviso = impostazione.valore
-		else
-			giorniPreavviso = null
+		String giorniPreavviso = impostazioniService.getImpostazione("numero_giorni")
+		String mailTo = impostazioniService.getImpostazione("email_scadenze")	
 		
 		Object list = null 
 		sqlService.withSql { sql ->
@@ -52,6 +56,31 @@ class ScheduleService {
 								order by giorni_rimanenti""")
 		}
 		
+		if(list!=null) {
 		
+			String subject = "Scadenze Farmaci"
+			String messaggio = "<table>"	
+			
+			list.each { element ->
+				messaggio+="<tr><td>"element.farmaco+"</td><td>"+element.paziente+"<td></td>"+element.giorni_rimanenti+"</td></tr>"
+			}
+			messaggio+="</table>"
+			
+			// Invio l'email
+			try {
+				mailService.send(
+						new MailBuilder()
+						.subject(subject)
+						.html(messaggio)
+						.addTo(mailTo)
+						.from("then.poidomani@gmail.com")
+						.message()
+						)
+				logger.info("Inviata richiesta cliente")
+				
+			}catch(Exception e) {
+				logger.error("Errore invio richiesta cliente")
+			}
+		}
 	}
 }
