@@ -86,6 +86,7 @@ class SomministrazioniController {
 							   inner join paziente on paziente.id = somministrazione.paziente_id
 							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
 							   where paziente.disabilitato = 0
+							   and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inserimento`)>=0
 							   order by somministrazione.data_inserimento desc""")
 		}
 	}
