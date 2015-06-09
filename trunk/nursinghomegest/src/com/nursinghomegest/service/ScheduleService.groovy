@@ -75,7 +75,8 @@ class ScheduleService {
 							      <tr><th>Farmaco</th><th>Paziente</th><th>Giorni Rimanenti</th></tr>"""
 			
 			list.each { element ->
-				messaggio+="""<tr><td>${element.farmaco}</td><td>${element.paziente}</td><td>${element.giorni_rimanenti} giorni rimanenti</td></tr>"""
+				Integer giorniRim = element.giorni_rimanenti
+				messaggio+="""<tr><td>${element.farmaco}</td><td>${element.paziente}</td><td>${giorniRim} giorni rimanenti</td></tr>"""
 			}
 			
 			messaggio+="""</table>
