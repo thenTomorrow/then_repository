@@ -72,7 +72,7 @@ class ReportsController {
 		sqlService.withSql { sql ->
 			return sql.rows("""select  t.farmaco,
 								       t.paziente,
-								       sum(t.giorni_durata-t.giorni_passati) as giorni_rimanenti
+								       sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)) as giorni_rimanenti
 								from
 								(
 								select farmaco.id as farmaco_id, 
