@@ -11,10 +11,10 @@
 				      	<td data-title="'Farmaco'" sortable="'farmaco'">{{scadenza.farmaco}}</td>
 				      	<td data-title="'Paziente'" sortable="'paziente'">{{scadenza.paziente}}</td>
 				      	<td data-title="'Giorni rimantenti'" sortable="'giorni_rimanenti'">
-				      		<span ng-show="scadenza.giorni_rimanenti>=0">
+				      		<span ng-show="scadenza.giorni_rimanenti>0">
 				      			{{scadenza.giorni_rimanenti}} giorni rimanenti
 				      		</span>
-				      		<span ng-show="scadenza.giorni_rimanenti<0">
+				      		<span ng-show="scadenza.giorni_rimanenti<=0">
 				      			nessun giorno rimanente
 				      		</span>
 				      	</td>
@@ -25,10 +25,7 @@
 				      		<span ng-show="scadenza.giorni_rimanenti>0 && scadenza.giorni_rimanenti<=numeroGiorni" class="label label-warning">
 				      			IN SCADENZA
 				      		</span>
-				      		<span ng-show="scadenza.giorni_rimanenti==0" class="label label-danger">
-				      			SCADUTE OGGI
-				      		</span>
-				      		<span ng-show="scadenza.giorni_rimanenti<0" class="label label-danger">
+				      		<span ng-show="scadenza.giorni_rimanenti<=0" class="label label-danger">
 				      			SCADUTE
 				      		</span>
 				      	</td>
