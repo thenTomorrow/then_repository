@@ -80,7 +80,8 @@ class SomministrazioniController {
 									  farmaco.descrizione as farmaco,
 									  concat(paziente.nome,' ',paziente.cognome) as paziente,
 									  somministrazione.quantita, 
-									  DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento 	
+									  DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento_string,
+									  somministrazione.data_inserimento
 							   from somministrazione
 							   inner join paziente on paziente.id = somministrazione.paziente_id
 							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
