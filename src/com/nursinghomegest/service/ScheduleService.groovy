@@ -32,7 +32,7 @@ class ScheduleService {
 		String giorniPreavviso = impostazioniService.getImpostazione("numero_giorni")
 		String[] mailTo = impostazioniService.getImpostazione("email_scadenze").split(",")	
 		
-		Object list = null 
+		def list = [] 
 		sqlService.withSql { sql ->
 			list = sql.rows("""select  t.farmaco,
 								       t.paziente,
@@ -56,7 +56,7 @@ class ScheduleService {
 								order by giorni_rimanenti""")
 		}
 		
-		if(list!=null) {
+		if(list) {
 		
 			String subject = "Scadenze Farmaci - Residenza per anziani Maria Madre della Fiducia"
 			String messaggio = """<style type='text/css'> table.altrowstable { font-family: verdana,arial,sans-serif; font-size:11px; color:#333333;  
