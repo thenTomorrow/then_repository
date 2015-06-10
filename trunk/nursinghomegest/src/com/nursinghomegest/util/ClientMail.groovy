@@ -42,12 +42,12 @@ class ClientMail implements MailService {
 			Properties props = new Properties()
 			props.put("mail.smtp.host", mailHost)
 			props.put("mail.smtp.port", mailPort)
-			props.put("mail.smtp.auth", true)
-			props.put("mail.smtp.starttls.enable", true)
-			props.put("mail.smtp.socketFactory.port",  mailPort);
-			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+//			props.put("mail.smtp.auth", true)
+//			props.put("mail.smtp.starttls.enable", true)
+//			props.put("mail.smtp.socketFactory.port",  mailPort);
+//			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			Session.getDefaultInstance(props, null)
-			Transport.send(msg, "then.poidomani@gmail.com", "georgepd..")
+			Transport.send(msg)
 			logger.info("Mail inviata con oggetto \""+msg.getSubject()+"\", from"+from+", to"+to)
 		}catch(Exception e) {
 			logger.error("Errore nell'invio della mail", e)
