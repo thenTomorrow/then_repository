@@ -76,7 +76,7 @@ class EsamiController {
 	public @ResponseBody Object getEsami(){
 		sqlService.withSql { sql ->
 			return sql.rows("""select esami.id, esami.paziente_id, CONCAT(paziente.nome,' ',paziente.cognome) as paziente,
-									  esami.descrizione, if(esami.mime_type is null,'non caricato','caricato') as img,
+									  esami.descrizione, if(esami.mime_type is null,'non caricata','caricata') as img,
 							          esami.data, DATE_FORMAT(esami.data,'%d/%m/%Y') as data_esame 
 							   from esami inner join paziente on paziente.id=esami.paziente_id
 							   order by esami.data desc""")
