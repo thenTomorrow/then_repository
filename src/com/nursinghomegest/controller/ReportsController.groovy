@@ -70,9 +70,11 @@ class ReportsController {
 	public @ResponseBody Object getScadenze() {
 		
 		sqlService.withSql { sql ->
-			return sql.rows("""select  t.farmaco,
-								       t.paziente,
-								       round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
+			return sql.rows("""select t.farmaco_id,
+									  t.farmaco,
+									  t.paziente_id, 
+								      t.paziente,
+								      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
 								from
 								(
 								select farmaco.id as farmaco_id, 
@@ -114,7 +116,9 @@ class ReportsController {
 	public @ResponseBody Object getScadenze(@PathVariable("pazienteId") Integer pazienteId) {
 		
 		sqlService.withSql { sql ->
-		return sql.rows("""select  t.farmaco,
+		return sql.rows("""select  t.farmaco_id,
+								   t.farmaco,
+								   t.paziente_id, 
 								   t.paziente,
 								   round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
 						   from

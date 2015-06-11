@@ -8,8 +8,12 @@
 	 		<div class="table-responsive">
 		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
 			    	<tr ng-repeat="scadenza in $data | filter:query">
-				      	<td data-title="'Farmaco'" sortable="'farmaco'">{{scadenza.farmaco}}</td>
-				      	<td data-title="'Paziente'" sortable="'paziente'">{{scadenza.paziente}}</td>
+				      	<td data-title="'Farmaco'" sortable="'farmaco'">
+				      		<a ng-href="#farmaci/{{scadenza.farmaco_id}}">{{scadenza.farmaco}}</a>
+				      	</td>
+				      	<td data-title="'Paziente'" sortable="'paziente'">
+				      		<a ng-href="#pazienti/{{scadenza.paziente_id}}">{{scadenza.paziente}}</a>
+				      	</td>
 				      	<td data-title="'Giorni rimantenti'" sortable="'giorni_rimanenti'">
 				      		<span ng-show="scadenza.giorni_rimanenti>0">
 				      			{{scadenza.giorni_rimanenti}} giorni rimanenti
