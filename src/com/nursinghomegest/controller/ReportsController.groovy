@@ -92,21 +92,69 @@ class ReportsController {
 		}
 	}
 	
-	@RequestMapping(value="/scadenze.csv", method = RequestMethod.GET)
+	@RequestMapping(value="/reports/scadenze.csv", method = RequestMethod.GET)
 	public void getScadenzeCsv(HttpServletRequest request, HttpServletResponse response){
 		
 		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenze()), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
-	@RequestMapping(value="/scadenze.xls", method = RequestMethod.GET)
+	@RequestMapping(value="/reports/scadenze.xls", method = RequestMethod.GET)
 	public void getScadenzeXls(HttpServletRequest request, HttpServletResponse response){
 		
 		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenze()), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
-	@RequestMapping(value="/scadenze.pdf", method = RequestMethod.GET)
+	@RequestMapping(value="/reports/scadenze.pdf", method = RequestMethod.GET)
 	public void getScadenzePdf(HttpServletRequest request, HttpServletResponse response){
 		
 		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenze()), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+	}
+	
+	@RequestMapping(value="/reports/scadenze/{pazienteId}", method = RequestMethod.GET)
+	public @ResponseBody Object getScadenze(@PathVariable("pazienteId") Integer pazienteId) {
+		
+		sqlService.withSql { sql ->
+		return sql.rows("""select  t.farmaco,
+								   t.paziente,
+								   round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
+						   from
+						   (
+						   select farmaco.id as farmaco_id, 
+						   farmaco.`descrizione` as farmaco,
+						   paziente.id as paziente_id,	
+						   concat(paziente.nome,' ',paziente.cognome) as paziente,
+						   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
+						   DATEDIFF(NOW(),somministrazione.`data_inserimento`) as giorni_passati
+						   from 
+						   `somministrazione`
+						   inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
+						   inner join paziente on paziente.id = somministrazione.`paziente_id`
+						   where paziente.id = ${pazienteId}
+						   and paziente.disabilitato = 0
+						   ) t
+						   group by t.farmaco_id, t.paziente_id
+						   order by giorni_rimanenti""")
+		}
+	}
+	
+	@RequestMapping(value="/reports/{pazienteId}/scadenze.csv", method = RequestMethod.GET)
+	public void getScadenzeCsv(@PathVariable("pazienteId") Integer pazienteId, 
+							   HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenze(pazienteId)), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+	}
+	
+	@RequestMapping(value="/reports/{pazienteId}/scadenze.xls", method = RequestMethod.GET)
+	public void getScadenzeXls(@PathVariable("pazienteId") Integer pazienteId, 
+							   HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenze(pazienteId)), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+	}
+	
+	@RequestMapping(value="/reports/{pazienteId}/scadenze.pdf", method = RequestMethod.GET)
+	public void getScadenzePdf(@PathVariable("pazienteId") Integer pazienteId, 
+							   HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenze(pazienteId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 }

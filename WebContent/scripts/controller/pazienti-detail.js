@@ -1,10 +1,12 @@
 var nursingHomeApp =  angular.module('nursingHomeApp');
 
-nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window',
-  function($scope, $routeParams, $http, $modal, $location, $window) {
+nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window', '$rootScope', 'ngTableParams', '$filter',  
+  function($scope, $routeParams, $http, $modal, $location, $window, $rootScope, ngTableParams, $filter) {
 	
+	$rootScope.loadingRoot = true;
 	$scope.alertOK = '';
 	$scope.isOpenDatiAnagrafici = true;
+	$scope.isOpenScadenze = true;
 	$scope.alertKO = '';
 	$scope.paziente = {};
 	
@@ -13,8 +15,22 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
     		if(data!=''){
     			$scope.pazienteId = $routeParams.pazienteId;
     			$scope.paziente = data;
+    			
+    			$http.get('impostazioni/numero_giorni').success(function(data1) {
+    				if(data1!=''){
+    					$scope.numeroGiorni = parseInt(data1);
+    					
+    					$http.get('reports/scadenze/'+$routeParams.pazienteId)
+    					.success(function(data2) {
+    						$scope.tableParams = createNgTableParams(data2, ngTableParams, $filter);
+    					    $rootScope.loadingRoot = false;
+    					})
+    					.error(function(){ });
+    				}
+    			});
     		}else{
     			$scope.pazienteId = "Nuovo";
+    			$rootScope.loadingRoot = false;
     		}
     	});
     }
