@@ -56,9 +56,20 @@
 							    </div>
 						    </div>
 					      	<div class="form-group">
-							   	<label for="data" class="col-md-2 control-label">Data</label>
+							   	<label for="data_inserimento" class="col-md-2 control-label">Data</label>
 							   	<div class="col-md-4">
-							    	<input type="date" name="data" id="data" ng-model="somministrazione.data_inserimento" class="form-control" required/>
+							    	<input type="date" name="data_inserimento" id="data_inserimento" ng-model="somministrazione.data_inserimento" class="form-control" required/>
+							    </div>
+						    </div>
+						    <div class="form-group" ng-show="somministrazione.id==null">
+							   	<label for="quantita_pacchi" class="col-md-2 control-label">Pacchi da caricare</label>
+							   	<div class="col-md-4">
+							    	<select name="quantita_pacchi" id="quantita_pacchi" ng-model="somministrazione.quantita_pacchi" class="form-control">
+							    		<option value="1">1</option>
+							    		<option value="2">2</option>
+							    		<option value="3">3</option>
+							    		<option value="4">4</option>
+							    	</select>
 							    </div>
 						    </div>
 						</accordion-group>    

@@ -79,7 +79,7 @@ class EsamiController {
 									  esami.descrizione, if(esami.mime_type is null,'non caricata','caricata') as img,
 							          esami.data, DATE_FORMAT(esami.data,'%d/%m/%Y') as data_esame 
 							   from esami inner join paziente on paziente.id=esami.paziente_id
-							   order by esami.data desc""")
+							   order by esami.id desc""")
 		}
 	}
 	

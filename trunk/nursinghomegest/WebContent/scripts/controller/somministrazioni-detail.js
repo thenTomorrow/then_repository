@@ -6,7 +6,7 @@ nursingHomeApp.controller('somministrazioni-detail', ['$scope', '$routeParams', 
 	$scope.alertOK = '';
 	$scope.isOpenDatiSomministrazione = true;
 	$scope.alertKO = '';
-	$scope.somministrazione = {quantita:1,data_inserimento:today()};
+	$scope.somministrazione = {quantita:1,data_inserimento:today(),quantita_pacchi:1};
 	
 	$http.get('pazienti/')
 	.success(function(data) {
@@ -68,13 +68,13 @@ nursingHomeApp.controller('somministrazioni-detail', ['$scope', '$routeParams', 
         	$http.put('somministrazioni/', $scope.somministrazione)
         	.success(function(data){
         		if(data != null){
-        			$scope.somministrazione = data;
-        			$scope.alertOK = 'Somministrazione inserita';
+        			$scope.somministrazione = {quantita:1,data_inserimento:today(),quantita_pacchi:1};
+        			$scope.alertOK = data+' somministrazioni inserite';
         		}else{
-        			$scope.alertKO = 'Errore: somministrazione non inserita';
+        			$scope.alertKO = 'Errore: somministrazioni non inserite';
         		}
         	}).error(function(data, status, headers, config){
-        		$scope.alertKO = 'Errore: somministrazione non inserita';
+        		$scope.alertKO = 'Errore: somministrazioni non inserite';
         	});
         }
     	$window.scrollTo(0,0);
