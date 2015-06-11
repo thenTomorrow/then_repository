@@ -134,7 +134,6 @@ class ReportsController {
 						   inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
 						   inner join paziente on paziente.id = somministrazione.`paziente_id`
 						   where paziente.id = ${pazienteId}
-						   and paziente.disabilitato = 0
 						   ) t
 						   group by t.farmaco_id, t.paziente_id
 						   order by giorni_rimanenti""")
