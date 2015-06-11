@@ -77,7 +77,9 @@ class SomministrazioniController {
 	public @ResponseBody Object getSomministrazioni(){
 		sqlService.withSql { sql ->
 			return sql.rows("""select somministrazione.id, 
+									  farmaco.id as farmaco_id,
 									  farmaco.descrizione as farmaco,
+									  paziente.id as paziente_id,
 									  concat(paziente.nome,' ',paziente.cognome) as paziente,
 									  somministrazione.quantita, 
 									  DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento_string,
