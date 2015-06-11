@@ -160,4 +160,53 @@ class ReportsController {
 		
 		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenze(pazienteId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
+							   
+	@RequestMapping(value="/reports/scadenze/byfarmaco/{farmacoId}", method = RequestMethod.GET)
+	public @ResponseBody Object getScadenzeByFarmaco(@PathVariable("farmacoId") Integer farmacoId) {
+		
+		sqlService.withSql { sql ->
+		return sql.rows("""select  t.farmaco_id,
+									t.farmaco,
+									t.paziente_id, 
+									t.paziente,
+									round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
+							from
+							(
+							select farmaco.id as farmaco_id, 
+							farmaco.`descrizione` as farmaco,
+							paziente.id as paziente_id,	
+							concat(paziente.nome,' ',paziente.cognome) as paziente,
+							farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
+							DATEDIFF(NOW(),somministrazione.`data_inserimento`) as giorni_passati
+							from 
+							`somministrazione`
+							inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
+							inner join paziente on paziente.id = somministrazione.`paziente_id`
+							where farmaco.id = ${farmacoId}
+							) t
+							group by t.farmaco_id, t.paziente_id
+							order by giorni_rimanenti""")
+		}
+	}
+	
+	@RequestMapping(value="/reports/byfarmaco/{farmacoId}/scadenze.csv", method = RequestMethod.GET)
+	public void getScadenzeByFarmacoCsv(@PathVariable("farmacoId") Integer farmacoId, 
+							  			HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenzeByFarmaco(farmacoId)), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+	}
+	
+	@RequestMapping(value="/reports/byfarmaco/{farmacoId}/scadenze.xls", method = RequestMethod.GET)
+	public void getScadenzeByFarmacoXls(@PathVariable("farmacoId") Integer farmacoId, 
+										HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenzeByFarmaco(farmacoId)), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+	}
+	
+	@RequestMapping(value="/reports/byfarmaco/{farmacoId}/scadenze.pdf", method = RequestMethod.GET)
+	public void getScadenzeByFarmacoPdf(@PathVariable("farmacoId") Integer farmacoId, 
+										HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenzeByFarmaco(farmacoId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+	}
 }
