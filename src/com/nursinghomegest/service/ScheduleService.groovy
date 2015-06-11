@@ -26,7 +26,7 @@ class ScheduleService {
 	@Resource
 	private MailService mailService
 	
-	@Scheduled(cron="0 0 9 * * ?")
+	@Scheduled(cron="0 30 9 * * ?")
 	public void scadenze() {
 		
 		String giorniPreavviso = impostazioniService.getImpostazione("numero_giorni")

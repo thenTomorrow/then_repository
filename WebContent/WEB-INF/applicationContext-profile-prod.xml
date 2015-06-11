@@ -29,8 +29,8 @@
 	</bean>
 	
 	<bean id="mailService" class="com.nursinghomegest.util.ClientMail">    
-    	<property name="mailHost" value="out.alice.it" /> 
-    	<property name="mailPort" value="25" />    
+    	<property name="mailHost" value="smtp.e-tna.it" /> 
+    	<property name="mailPort" value="587" />    
     </bean>
 	      	
 </beans>
