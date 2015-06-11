@@ -71,23 +71,25 @@ class ReportsController {
 		
 		sqlService.withSql { sql ->
 			return sql.rows("""select t.farmaco_id,
-									  t.farmaco,
-									  t.paziente_id, 
+								      t.farmaco,
+								      t.paziente_id, 
 								      t.paziente,
-								      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
+								      round(sum(t.giorni_durata)-sum(DATEDIFF(NOW(),t.`data_inserimento`)),0) as giorni_rimanenti
 								from
 								(
 								select farmaco.id as farmaco_id, 
-									   farmaco.`descrizione` as farmaco,
+								       farmaco.`descrizione` as farmaco,
 								       paziente.id as paziente_id,	
 								       concat(paziente.nome,' ',paziente.cognome) as paziente,
-									   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
-								       DATEDIFF(NOW(),somministrazione.`data_inserimento`) as giorni_passati
+								       sum(farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`) as giorni_durata,
+								       min(somministrazione.`data_inserimento`) as data_inserimento
 								from 
 								`somministrazione`
 								inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
 								inner join paziente on paziente.id = somministrazione.`paziente_id`
-							    where paziente.disabilitato = 0
+								where paziente.disabilitato = 0
+								and (farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`)-DATEDIFF(NOW(),somministrazione.`data_inserimento`)>=0
+								group by farmaco_id, paziente_id
 								) t
 								group by t.farmaco_id, t.paziente_id
 								order by giorni_rimanenti""")
@@ -116,27 +118,29 @@ class ReportsController {
 	public @ResponseBody Object getScadenze(@PathVariable("pazienteId") Integer pazienteId) {
 		
 		sqlService.withSql { sql ->
-		return sql.rows("""select  t.farmaco_id,
-								   t.farmaco,
-								   t.paziente_id, 
-								   t.paziente,
-								   round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
-						   from
-						   (
-						   select farmaco.id as farmaco_id, 
-						   farmaco.`descrizione` as farmaco,
-						   paziente.id as paziente_id,	
-						   concat(paziente.nome,' ',paziente.cognome) as paziente,
-						   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
-						   DATEDIFF(NOW(),somministrazione.`data_inserimento`) as giorni_passati
-						   from 
-						   `somministrazione`
-						   inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
-						   inner join paziente on paziente.id = somministrazione.`paziente_id`
-						   where paziente.id = ${pazienteId}
-						   ) t
-						   group by t.farmaco_id, t.paziente_id
-						   order by giorni_rimanenti""")
+		return sql.rows("""select t.farmaco_id,
+							      t.farmaco,
+							      t.paziente_id, 
+							      t.paziente,
+							      round(sum(t.giorni_durata)-sum(DATEDIFF(NOW(),t.`data_inserimento`)),0) as giorni_rimanenti
+							from
+							(
+							select farmaco.id as farmaco_id, 
+							       farmaco.`descrizione` as farmaco,
+							       paziente.id as paziente_id,	
+							       concat(paziente.nome,' ',paziente.cognome) as paziente,
+							       sum(farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`) as giorni_durata,
+							       min(somministrazione.`data_inserimento`) as data_inserimento
+							from 
+							`somministrazione`
+							inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
+							inner join paziente on paziente.id = somministrazione.`paziente_id`
+							where paziente.id = ${pazienteId}
+							and (farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`)-DATEDIFF(NOW(),somministrazione.`data_inserimento`)>=0
+							group by farmaco_id, paziente_id
+							) t
+							group by t.farmaco_id, t.paziente_id
+							order by giorni_rimanenti""")
 		}
 	}
 	
@@ -165,24 +169,26 @@ class ReportsController {
 	public @ResponseBody Object getScadenzeByFarmaco(@PathVariable("farmacoId") Integer farmacoId) {
 		
 		sqlService.withSql { sql ->
-		return sql.rows("""select  t.farmaco_id,
-									t.farmaco,
-									t.paziente_id, 
-									t.paziente,
-									round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
+		return sql.rows("""select t.farmaco_id,
+							      t.farmaco,
+							      t.paziente_id, 
+							      t.paziente,
+							      round(sum(t.giorni_durata)-sum(DATEDIFF(NOW(),t.`data_inserimento`)),0) as giorni_rimanenti
 							from
 							(
 							select farmaco.id as farmaco_id, 
-							farmaco.`descrizione` as farmaco,
-							paziente.id as paziente_id,	
-							concat(paziente.nome,' ',paziente.cognome) as paziente,
-							farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
-							DATEDIFF(NOW(),somministrazione.`data_inserimento`) as giorni_passati
+							       farmaco.`descrizione` as farmaco,
+							       paziente.id as paziente_id,	
+							       concat(paziente.nome,' ',paziente.cognome) as paziente,
+							       sum(farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`) as giorni_durata,
+							       min(somministrazione.`data_inserimento`) as data_inserimento
 							from 
 							`somministrazione`
 							inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
 							inner join paziente on paziente.id = somministrazione.`paziente_id`
 							where farmaco.id = ${farmacoId}
+							and (farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`)-DATEDIFF(NOW(),somministrazione.`data_inserimento`)>=0
+							group by farmaco_id, paziente_id
 							) t
 							group by t.farmaco_id, t.paziente_id
 							order by giorni_rimanenti""")
