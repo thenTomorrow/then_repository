@@ -89,7 +89,7 @@ class SomministrazioniController {
 							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
 							   where paziente.disabilitato = 0
 							   and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inserimento`)>=0
-							   order by somministrazione.data_inserimento desc""")
+							   order by somministrazione.id desc""")
 		}
 	}
 	
@@ -115,10 +115,13 @@ class SomministrazioniController {
 	public @ResponseBody Object insert(@RequestBody Object somministrazione) throws Exception {
 		sqlService.withSql { sql ->
 			
-			def res = sql.executeInsert("""INSERT INTO somministrazione(farmaco_id,paziente_id,quantita,data_inserimento)
+			for(int i=0; i<Integer.parseInt(""+somministrazione.quantita_pacchi); i++) {
+				def res = sql.executeInsert("""INSERT INTO somministrazione(farmaco_id,paziente_id,quantita,data_inserimento)
 									       VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},${somministrazione.data_inserimento})""")
-			def id = (res[0][0]).intValue()
-			return getSomministrazione(id)
+				def id = (res[0][0]).intValue()
+				println i
+			}
+			return somministrazione.quantita_pacchi
 		}
 	}
 	
