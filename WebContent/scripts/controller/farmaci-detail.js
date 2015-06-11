@@ -1,10 +1,12 @@
 var nursingHomeApp =  angular.module('nursingHomeApp');
 
-nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window',
-  function($scope, $routeParams, $http, $modal, $location, $window) {
+nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window', '$rootScope', 'ngTableParams', '$filter',
+  function($scope, $routeParams, $http, $modal, $location, $window, $rootScope, ngTableParams, $filter) {
 	
+	$rootScope.loadingRoot = true;
 	$scope.alertOK = '';
 	$scope.isOpenDatiFarmaco = true;
+	$scope.isOpenScadenze = true;
 	$scope.alertKO = '';
 	$scope.farmaco = {quantita_per_pezzo:12};
 	
@@ -13,12 +15,27 @@ nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', 
     		if(data!=''){
     			$scope.farmacoId = $routeParams.farmacoId;
     			$scope.farmaco = data;
-    		}else{
+    			
+    			$http.get('impostazioni/numero_giorni').success(function(data1) {
+    				if(data1!=''){
+    					$scope.numeroGiorni = parseInt(data1);
+    					
+    					$http.get('reports/scadenze/byfarmaco/'+$routeParams.farmacoId)
+    					.success(function(data2) {
+    						$scope.tableParams = createNgTableParams(data2, ngTableParams, $filter);
+    					})
+    					.error(function(){ });
+    				}
+    			});
+    		}else
     			$scope.farmacoId = "Nuovo";
-    		}
+    		
+    		$rootScope.loadingRoot = false;
     	});
     }
-   
+    else
+    	$rootScope.loadingRoot = false;
+    
     $scope.open = function () {
     	var farmacoId = $scope.farmaco.id;
     	var modalInstance = $modal.open({

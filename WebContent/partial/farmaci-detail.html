@@ -44,26 +44,67 @@
 							   	<div class="col-md-4">
 							    	<input type="number" name="quantita_per_pezzo" id="quantita_per_pezzo" ng-model="farmaco.quantita_per_pezzo" class="form-control" required/>
 							    </div>
+						    </div><br/>
+						    <div class="row">
+						    	<div class="col-md-8">
+						     		<a class="btn btn-primary" href="#/farmaci">
+						     			<i class="glyphicon glyphicon-arrow-left"></i>
+						     			Indietro
+						     		</a>
+						     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="farmacoForm.descrizione.$invalid || farmacoForm.quantita_per_pezzo.$invalid">
+						     			<i class="glyphicon glyphicon-floppy-disk"></i>
+						     			Salva
+						     		</button>
+						     		<button class="btn btn-danger" ng-show="farmaco.id!=null" ng-click="open()" >
+						     			<i class="glyphicon glyphicon-trash"></i>
+						     			Cancella
+						     		</button>
+						     	</div>	
+						    </div>
+						</accordion-group>
+						<accordion-group heading="Pazienti somministrati" is-open="isOpenScadenze" ng-show="farmaco.id!=null">
+							<div class="table-responsive">
+						 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
+							    	<tr ng-repeat="scadenza in $data | filter:query">
+								      	<td data-title="'Paziente'" sortable="'paziente'">
+								      		<a ng-href="#pazienti/{{scadenza.paziente_id}}">{{scadenza.paziente}}</a>
+								      	</td>
+								      	<td data-title="'Giorni rimantenti'" sortable="'giorni_rimanenti'">
+								      		<span ng-show="scadenza.giorni_rimanenti>0">
+								      			{{scadenza.giorni_rimanenti}} giorni rimanenti
+								      		</span>
+								      		<span ng-show="scadenza.giorni_rimanenti<=0">
+								      			nessun giorno rimanente
+								      		</span>
+								      	</td>
+								      	<td data-title="'Stato'">
+								      		<span ng-show="scadenza.giorni_rimanenti>numeroGiorni" class="label label-primary">
+								      			OK
+								      		</span>
+								      		<span ng-show="scadenza.giorni_rimanenti>0 && scadenza.giorni_rimanenti<=numeroGiorni" class="label label-warning">
+								      			IN SCADENZA
+								      		</span>
+								      		<span ng-show="scadenza.giorni_rimanenti<=0" class="label label-danger">
+								      			SCADUTE
+								      		</span>
+								      	</td>
+							    	</tr>
+						      	</table>
+					      	</div>
+					      	<div class="panel-footer" align="center">
+						    	<a class="btn btn-warning" ng-href="reports/byfarmaco/{{farmaco.id}}/scadenze.csv" >
+						    		<i class="glyphicon glyphicon-export"></i> CSV
+						    	</a>
+						    	<a class="btn btn-success" ng-href="reports/byfarmaco/{{farmaco.id}}/scadenze.xls" >
+						    		<i class="glyphicon glyphicon-export"></i> Excel
+						    	</a>
+						    	<a class="btn btn-danger" ng-href="reports/byfarmaco/{{farmaco.id}}/scadenze.pdf" >
+						    		<i class="glyphicon glyphicon-export"></i> PDF
+						    	</a>
 						    </div>
 						</accordion-group>    
 					</accordion>
 				</div>
-			    <div class="row">
-			    	<div class="col-md-8">
-			     		<a class="btn btn-primary" href="#/farmaci">
-			     			<i class="glyphicon glyphicon-arrow-left"></i>
-			     			Indietro
-			     		</a>
-			     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="farmacoForm.descrizione.$invalid || farmacoForm.quantita_per_pezzo.$invalid">
-			     			<i class="glyphicon glyphicon-floppy-disk"></i>
-			     			Salva
-			     		</button>
-			     		<button class="btn btn-danger" ng-show="farmaco.id!=null" ng-click="open()" >
-			     			<i class="glyphicon glyphicon-trash"></i>
-			     			Cancella
-			     		</button>
-			     	</div>	
-			    </div>
 			</form>	
 		</div>
 	</div>
