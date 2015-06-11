@@ -86,30 +86,69 @@
 							   	<div class="col-md-4">
 							    	<input type="text" name="esenzione_ticket" id="esenzione_ticket" ng-model="paziente.esenzione_ticket" class="form-control"/>
 							    </div>
+						    </div><br/>
+						    <div class="row">
+						    	<div class="col-md-8">
+						     		<a class="btn btn-primary" href="#/pazienti">
+						     			<i class="glyphicon glyphicon-arrow-left"></i>
+						     			Indietro
+						     		</a>
+						     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="pazienteForm.nome.$invalid || pazienteForm.cognome.$invalid">
+						     			<i class="glyphicon glyphicon-floppy-disk"></i>
+						     			Salva
+						     		</button>
+						     		<button class="btn btn-danger" ng-show="paziente.id!=null && !paziente.disabilitato" ng-click="open()" >
+						     			<i class="glyphicon glyphicon-trash"></i>
+						     			Disabilita
+						     		</button>
+						     		<button type="button" class="btn btn-primary" ng-click="riabilita()" ng-show="paziente.id!=null && paziente.disabilitato">
+						     			<i class="glyphicon glyphicon-play"></i> 
+						     			Riabilita
+						     		</button>
+						     	</div>	
+						    </div>
+						</accordion-group>
+						<accordion-group heading="Scadenze Farmaci" is-open="isOpenScadenze" ng-show="paziente.id!=null">
+							<div class="table-responsive">
+						 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
+							    	<tr ng-repeat="scadenza in $data | filter:query">
+								      	<td data-title="'Farmaco'" sortable="'farmaco'">{{scadenza.farmaco}}</td>
+								      	<td data-title="'Giorni rimantenti'" sortable="'giorni_rimanenti'">
+								      		<span ng-show="scadenza.giorni_rimanenti>0">
+								      			{{scadenza.giorni_rimanenti}} giorni rimanenti
+								      		</span>
+								      		<span ng-show="scadenza.giorni_rimanenti<=0">
+								      			nessun giorno rimanente
+								      		</span>
+								      	</td>
+								      	<td data-title="'Stato'">
+								      		<span ng-show="scadenza.giorni_rimanenti>numeroGiorni" class="label label-primary">
+								      			OK
+								      		</span>
+								      		<span ng-show="scadenza.giorni_rimanenti>0 && scadenza.giorni_rimanenti<=numeroGiorni" class="label label-warning">
+								      			IN SCADENZA
+								      		</span>
+								      		<span ng-show="scadenza.giorni_rimanenti<=0" class="label label-danger">
+								      			SCADUTE
+								      		</span>
+								      	</td>
+							    	</tr>
+						      	</table>
+					      	</div>
+					      	<div class="panel-footer" align="center">
+						    	<a class="btn btn-warning" ng-href="reports/{{paziente.id}}/scadenze.csv" >
+						    		<i class="glyphicon glyphicon-export"></i> CSV
+						    	</a>
+						    	<a class="btn btn-success" ng-href="reports/{{paziente.id}}scadenze.xls" >
+						    		<i class="glyphicon glyphicon-export"></i> Excel
+						    	</a>
+						    	<a class="btn btn-danger" ng-href="reports/{{paziente.id}}scadenze.pdf" >
+						    		<i class="glyphicon glyphicon-export"></i> PDF
+						    	</a>
 						    </div>
 						</accordion-group>    
 					</accordion>
 				</div>
-			    <div class="row">
-			    	<div class="col-md-8">
-			     		<a class="btn btn-primary" href="#/pazienti">
-			     			<i class="glyphicon glyphicon-arrow-left"></i>
-			     			Indietro
-			     		</a>
-			     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="pazienteForm.nome.$invalid || pazienteForm.cognome.$invalid">
-			     			<i class="glyphicon glyphicon-floppy-disk"></i>
-			     			Salva
-			     		</button>
-			     		<button class="btn btn-danger" ng-show="paziente.id!=null && !paziente.disabilitato" ng-click="open()" >
-			     			<i class="glyphicon glyphicon-trash"></i>
-			     			Disabilita
-			     		</button>
-			     		<button type="button" class="btn btn-primary" ng-click="riabilita()" ng-show="paziente.id!=null && paziente.disabilitato">
-			     			<i class="glyphicon glyphicon-play"></i> 
-			     			Riabilita
-			     		</button>
-			     	</div>	
-			    </div>
 			</form>	
 		</div>
 	</div>
