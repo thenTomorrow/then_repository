@@ -23,17 +23,18 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
     					$http.get('reports/scadenze/'+$routeParams.pazienteId)
     					.success(function(data2) {
     						$scope.tableParams = createNgTableParams(data2, ngTableParams, $filter);
-    					    $rootScope.loadingRoot = false;
     					})
     					.error(function(){ });
     				}
     			});
-    		}else{
+    		}else
     			$scope.pazienteId = "Nuovo";
-    			$rootScope.loadingRoot = false;
-    		}
+    		
+    		$rootScope.loadingRoot = false;
     	});
     }
+    else
+    	$rootScope.loadingRoot = false;
    
     $scope.open = function () {
     	var pazienteId = $scope.paziente.id;
