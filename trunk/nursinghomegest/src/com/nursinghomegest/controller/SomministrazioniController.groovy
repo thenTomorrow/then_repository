@@ -133,6 +133,7 @@ class SomministrazioniController {
 												 inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
 												 where somministrazione.farmaco_id = ${somministrazione.farmaco_id}
 												 and somministrazione.paziente_id = ${somministrazione.paziente_id}
+												 and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=0
 												 order by somministrazione.data_inizio DESC
 												 limit 1
 												 )
