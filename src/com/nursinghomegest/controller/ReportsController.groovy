@@ -74,7 +74,7 @@ class ReportsController {
 									  t.farmaco,
 									  t.paziente_id,
 								      t.paziente,
-								      round(sum(t.giorni_durata-t.giorni_passati),0) as giorni_rimanenti
+								      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
 								from
 								(
 								select farmaco.id as farmaco_id, 
@@ -121,7 +121,7 @@ class ReportsController {
 								  t.farmaco,
 								  t.paziente_id,
 								  t.paziente,
-							      round(sum(t.giorni_durata-t.giorni_passati),0) as giorni_rimanenti
+							      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
 							from
 							(
 							select farmaco.id as farmaco_id, 
@@ -171,7 +171,7 @@ class ReportsController {
 								  t.farmaco,
 								  t.paziente_id,
 								  t.paziente,
-							      round(sum(t.giorni_durata-t.giorni_passati),0) as giorni_rimanenti
+							      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
 							from
 							(
 							select farmaco.id as farmaco_id, 
