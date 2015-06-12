@@ -155,6 +155,7 @@ class SomministrazioniController {
 		def somministrazione = getSomministrazione(id)
 		sqlService.withSql { sql ->
 			sql.execute("""DELETE FROM somministrazione WHERE id = ${id}""")
+			sql.execute("""CALL update_data_inizio_params(${somministrazione.paziente_id},${somministrazione.farmaco_id})""")
 			return somministrazione
 		}
 	}
