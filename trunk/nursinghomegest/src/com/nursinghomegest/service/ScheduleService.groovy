@@ -35,30 +35,28 @@ class ScheduleService {
 		def list = [] 
 		sqlService.withSql { sql ->
 			list = sql.rows("""select t.farmaco_id,
-								      t.farmaco,
-								      t.paziente_id, 
+									  t.farmaco,
+									  t.paziente_id,
 								      t.paziente,
-								      round(sum(t.giorni_durata)-sum(DATEDIFF(NOW(),t.`data_inserimento`)),0) as giorni_rimanenti
+								      round(sum(t.giorni_durata-t.giorni_passati),0) as giorni_rimanenti
 								from
 								(
 								select farmaco.id as farmaco_id, 
 								       farmaco.`descrizione` as farmaco,
 								       paziente.id as paziente_id,	
 								       concat(paziente.nome,' ',paziente.cognome) as paziente,
-								       sum(farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`) as giorni_durata,
-								       min(somministrazione.`data_inserimento`) as data_inserimento
+									   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
+								       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
 								from 
 								`somministrazione`
 								inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
 								inner join paziente on paziente.id = somministrazione.`paziente_id`
 								where paziente.disabilitato = 0
-								and (farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`)-DATEDIFF(NOW(),somministrazione.`data_inserimento`)>=0
-								group by farmaco_id, paziente_id
 								) t
 								group by t.farmaco_id, t.paziente_id
 							    having giorni_rimanenti<=${giorniPreavviso}		
 								order by giorni_rimanenti
-								""")
+							""")
 		}
 		
 		if(list) {

@@ -19,17 +19,6 @@ nursingHomeApp.controller('somministrazioni-detail', ['$scope', '$routeParams', 
 		$scope.farmaci = data;
 	})
 	.error(function(){ });	
-	
-    if($routeParams.somministrazioneId!=null && $routeParams.somministrazioneId!=''){
-    	$http.get('somministrazioni/'+$routeParams.somministrazioneId).success(function(data) {
-    		if(data!=''){
-    			$scope.somministrazioneId = $routeParams.somministrazioneId;
-    			$scope.somministrazione = data;
-    		}else{
-    			$scope.somministrazioneId = "Nuovo";
-    		}
-    	});
-    }
    
     $scope.open = function () {
     	var somministrazioneId = $scope.somministrazione.id;
@@ -53,30 +42,19 @@ nursingHomeApp.controller('somministrazioni-detail', ['$scope', '$routeParams', 
     };
     
     $scope.save = function(){
-		if($scope.somministrazione.id!=null){
-        	$http.post('somministrazioni/'+$scope.somministrazione.id, $scope.somministrazione)
-    		.success(function(data){
-        		if(data != null){
-        			$scope.alertOK = 'Somministrazione modificata';
-        		}else
-        			$scope.alertKO = 'Errore: somministrazione non modificata';
-        	}).error(function(data, status, headers, config){
-        		$scope.alertKO = 'Errore: somministrazione non modificata';
-        	});	
-        }
-        else{
-        	$http.put('somministrazioni/', $scope.somministrazione)
-        	.success(function(data){
-        		if(data != null){
-        			$scope.somministrazione = {quantita:1,data_inserimento:today(),quantita_pacchi:1};
-        			$scope.alertOK = data+' somministrazioni inserite';
-        		}else{
-        			$scope.alertKO = 'Errore: somministrazioni non inserite';
-        		}
-        	}).error(function(data, status, headers, config){
-        		$scope.alertKO = 'Errore: somministrazioni non inserite';
-        	});
-        }
+
+    	$http.put('somministrazioni/', $scope.somministrazione)
+    	.success(function(data){
+    		if(data != null){
+    			$scope.somministrazione = {quantita:1,data_inserimento:today(),quantita_pacchi:1};
+    			$scope.alertOK = data+' somministrazioni inserite';
+    		}else{
+    			$scope.alertKO = 'Errore: somministrazioni non inserite';
+    		}
+    	}).error(function(data, status, headers, config){
+    		$scope.alertKO = 'Errore: somministrazioni non inserite';
+    	});
+
     	$window.scrollTo(0,0);
     };
 }]);

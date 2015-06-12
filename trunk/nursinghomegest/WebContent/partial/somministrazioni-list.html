@@ -27,7 +27,8 @@
 	 		<div class="table-responsive">
 		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
 			    	<tr ng-repeat="somministrazione in $data | filter:query">
-				      	<td data-title="'Data'" sortable="'data_inserimento'" class="text-center">{{somministrazione.data_inserimento_string}}</td>
+				      	<td data-title="'Data Inserimento'" sortable="'data_inserimento'" class="text-center">{{somministrazione.data_inserimento_string}}</td>
+				      	<td data-title="'Data Inizio Uso'" sortable="'data_inizio'" class="text-center">{{somministrazione.data_inizio_string}}</td>
 				      	<td data-title="'Farmaco'" sortable="'farmaco'">
 				      		<a ng-href="#farmaci/{{somministrazione.farmaco_id}}">{{somministrazione.farmaco}}</a>
 				      	</td>
@@ -35,10 +36,9 @@
 				      		<a ng-href="#pazienti/{{somministrazione.paziente_id}}">{{somministrazione.paziente}}</a>
 				      	</td>
 				      	<td data-title="'Quantit&agrave; giornaliera'" sortable="'quantita'" class="text-right">{{somministrazione.quantita}}</td>
-				      	<td data-title="''" class="text-center">
-				      		<button type="button" class="btn btn-warning" ng-click="dettaglio(somministrazione.id)"><i class="glyphicon glyphicon-floppy-disk"></i> Modifica</button>
-				      		<button type="button" class="btn btn-danger" ng-click="cancella(somministrazione.id)"><i class="glyphicon glyphicon-trash"></i> Cancella</button>
-				      	</td>
+<!-- 				      	<td data-title="''" class="text-center"> -->
+<!-- 				      		<button type="button" class="btn btn-danger" ng-click="cancella(somministrazione.id)"><i class="glyphicon glyphicon-trash"></i> Cancella</button> -->
+<!-- 				      	</td> -->
 			    	</tr>
 		      	</table>
 	      	</div>
