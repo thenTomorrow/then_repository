@@ -67,7 +67,7 @@ class SomministrazioniController {
 	@RequestMapping(value="/somministrazioni/{id}", method = RequestMethod.GET)
 	public @ResponseBody Object getSomministrazione(@PathVariable("id") Integer id) {
 		sqlService.withSql { sql ->
-			return sql.firstRow("""select id, farmaco_id, paziente_id, quantita, data_inserimento 
+			return sql.firstRow("""select id, farmaco_id, paziente_id, quantita, data_inserimento, data_inizio 
 								   from somministrazione 
 								   where id = ${id}""")
 		}
@@ -83,7 +83,9 @@ class SomministrazioniController {
 									  concat(paziente.nome,' ',paziente.cognome) as paziente,
 									  somministrazione.quantita, 
 									  DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento_string,
-									  somministrazione.data_inserimento
+									  somministrazione.data_inserimento,
+									  DATE_FORMAT(somministrazione.data_inizio,'%d/%m/%Y') as data_inizio_string,
+									  somministrazione.data_inizio
 							   from somministrazione
 							   inner join paziente on paziente.id = somministrazione.paziente_id
 							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
@@ -117,26 +119,34 @@ class SomministrazioniController {
 			
 			for(int i=0; i<Integer.parseInt(""+somministrazione.quantita_pacchi); i++) {
 				def res = sql.executeInsert("""INSERT INTO somministrazione(farmaco_id,paziente_id,quantita,data_inserimento)
-									       VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},${somministrazione.data_inserimento})""")
+									       VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},now())""")
 				def id = (res[0][0]).intValue()
-				println i
+				
+				if(id!=null) {
+					// aggiorno la data_inizio
+					def dataInizio = somministrazione.data_inserimento
+					dataInizio = sql.firstRow("""select 
+												 ifnull(GREATEST(somministrazione.`data_inserimento`,
+												 (
+												 select DATE_ADD(`somministrazione`.`data_inizio`,INTERVAL round(farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`,0) DAY) as data_fine
+												 from somministrazione 
+												 inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
+												 where somministrazione.farmaco_id = ${somministrazione.farmaco_id}
+												 and somministrazione.paziente_id = ${somministrazione.paziente_id}
+												 order by somministrazione.data_inizio DESC
+												 limit 1
+												 )
+												 ),somministrazione.data_inserimento) as data_inizio
+												 from somministrazione
+												 where somministrazione.id = ${id}""").data_inizio
+					
+					sql.executeUpdate("""UPDATE somministrazione
+										SET data_inizio = ${dataInizio}
+										WHERE id = ${id} """)
+				}
 			}
 			return somministrazione.quantita_pacchi
 		}
-	}
-	
-	@RequestMapping(value="/somministrazioni/{id}",  method = RequestMethod.POST)
-	public @ResponseBody Object edit(@PathVariable("id") Integer id, @RequestBody Object somministrazione) throws Exception {
-		sqlService.withSql { sql ->
-		
-			def res = sql.executeUpdate("""UPDATE somministrazione 
-									       SET farmaco_id = ${somministrazione.farmaco_id},
-										   	   paziente_id = ${somministrazione.paziente_id},
-											   quantita = ${somministrazione.quantita},
-											   data_inserimento = ${somministrazione.data_inserimento}
-										   WHERE id = ${id} """)			
-		}
-		return getSomministrazione(id)
 	}
 	
 	@RequestMapping(value="/somministrazioni/{id}",  method = RequestMethod.DELETE)
