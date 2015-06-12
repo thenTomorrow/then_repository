@@ -10,7 +10,7 @@ function today() {
 	if(mm<10) {
 	    mm='0'+mm
 	} 
-	today = dd+'/'+mm+'/'+yyyy;
+	today = yyyy+"-"+mm+"-"+dd;
 	
 	return today;
 }
