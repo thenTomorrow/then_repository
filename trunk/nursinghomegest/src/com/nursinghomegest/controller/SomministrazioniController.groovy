@@ -119,7 +119,7 @@ class SomministrazioniController {
 			
 			for(int i=0; i<Integer.parseInt(""+somministrazione.quantita_pacchi); i++) {
 				def res = sql.executeInsert("""INSERT INTO somministrazione(farmaco_id,paziente_id,quantita,data_inserimento)
-									       VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},now())""")
+									       VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},${somministrazione.data_inserimento})""")
 				def id = (res[0][0]).intValue()
 				
 				if(id!=null) {
