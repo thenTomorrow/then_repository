@@ -113,13 +113,54 @@ class SomministrazioniController {
 		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getSomministrazioni()), "somministrazioni."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
+	@RequestMapping(value="/somministrazioni/bypaziente/{pazienteId}", method = RequestMethod.GET)
+	public @ResponseBody Object getSomministrazioni(@PathVariable("pazienteId") Integer pazienteId){
+		sqlService.withSql { sql ->
+		return sql.rows("""select somministrazione.id, 
+							farmaco.id as farmaco_id,
+							farmaco.descrizione as farmaco,
+							paziente.id as paziente_id,
+							concat(paziente.nome,' ',paziente.cognome) as paziente,
+							somministrazione.quantita, 
+							DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento_string,
+							somministrazione.data_inserimento,
+							DATE_FORMAT(somministrazione.data_inizio,'%d/%m/%Y') as data_inizio_string,
+							somministrazione.data_inizio
+							from somministrazione
+							inner join paziente on paziente.id = somministrazione.paziente_id
+							inner join farmaco on farmaco.id = somministrazione.farmaco_id
+							where paziente.disabilitato = 0
+							and paziente.id = ${pazienteId}
+							and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=0
+							order by somministrazione.id desc""")
+		}
+	}
+	
+	@RequestMapping(value="/somministrazioni/{pazienteId}/somministrazioni.csv", method = RequestMethod.GET)
+	public void getFarmaciCsv(HttpServletRequest request, HttpServletResponse response, @PathVariable("pazienteId") Integer pazienteId){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getSomministrazioni(pazienteId)), "somministrazioni."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+	}
+	
+	@RequestMapping(value="/somministrazioni/{pazienteId}/somministrazioni.xls", method = RequestMethod.GET)
+	public void getFarmaciXls(HttpServletRequest request, HttpServletResponse response, @PathVariable("pazienteId") Integer pazienteId){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getSomministrazioni(pazienteId)), "somministrazioni."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+	}
+	
+	@RequestMapping(value="/somministrazioni/{pazienteId}/somministrazioni.pdf", method = RequestMethod.GET)
+	public void getFarmaciPdf(HttpServletRequest request, HttpServletResponse response, @PathVariable("pazienteId") Integer pazienteId){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getSomministrazioni(pazienteId)), "somministrazioni."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+	}
+	
 	@RequestMapping(value="/somministrazioni",  method = RequestMethod.PUT)
 	public @ResponseBody Object insert(@RequestBody Object somministrazione) throws Exception {
 		sqlService.withSql { sql ->
 			
 			for(int i=0; i<Integer.parseInt(""+somministrazione.quantita_pacchi); i++) {
 				def res = sql.executeInsert("""INSERT INTO somministrazione(farmaco_id,paziente_id,quantita,data_inserimento)
-									       VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},${somministrazione.data_inserimento})""")
+									       	   VALUES(${somministrazione.farmaco_id},${somministrazione.paziente_id},${somministrazione.quantita},${somministrazione.data_inserimento})""")
 				def id = (res[0][0]).intValue()
 				
 				if(id!=null) {
