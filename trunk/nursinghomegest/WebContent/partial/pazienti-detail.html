@@ -149,6 +149,31 @@
 						    	</a>
 						    </div>
 						</accordion-group>    
+						<accordion-group heading="Somministrazioni Inserite" is-open="isOpenSomministrazioni" ng-show="paziente.id!=null">
+							<div class="table-responsive">
+						 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams1">
+							    	<tr ng-repeat="somministrazione in $data | filter:query">
+								      	<td data-title="'Data Inserimento'" sortable="'data_inserimento'" class="text-center">{{somministrazione.data_inserimento_string}}</td>
+								      	<td data-title="'Data Inizio Uso'" sortable="'data_inizio'" class="text-center">{{somministrazione.data_inizio_string}}</td>
+								      	<td data-title="'Farmaco'" sortable="'farmaco'">
+								      		<a ng-href="#farmaci/{{somministrazione.farmaco_id}}">{{somministrazione.farmaco}}</a>
+								      	</td>
+								      	<td data-title="'Quantit&agrave; giornaliera'" sortable="'quantita'" class="text-right">{{somministrazione.quantita}}</td>
+								    </tr>
+						      	</table>
+					      	</div>
+					      	<div class="panel-footer" align="center">
+						    	<a class="btn btn-warning" ng-href="somministrazioni/{{paziente.id}}/somministrazioni.csv" >
+						    		<i class="glyphicon glyphicon-export"></i> CSV
+						    	</a>
+						    	<a class="btn btn-success" ng-href="somministrazioni/{{paziente.id}}/somministrazioni.xls" >
+						    		<i class="glyphicon glyphicon-export"></i> Excel
+						    	</a>
+						    	<a class="btn btn-danger" ng-href="somministrazioni/{{paziente.id}}/somministrazioni.pdf" >
+						    		<i class="glyphicon glyphicon-export"></i> PDF
+						    	</a>
+						    </div>
+						</accordion-group>    
 					</accordion>
 				</div>
 			</form>	

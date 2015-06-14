@@ -7,6 +7,7 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
 	$scope.alertOK = '';
 	$scope.isOpenDatiAnagrafici = true;
 	$scope.isOpenScadenze = true;
+	$scope.isOpenSomministrazioni = true;
 	$scope.alertKO = '';
 	$scope.paziente = {};
 	
@@ -27,6 +28,13 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
     					.error(function(){ });
     				}
     			});
+    			
+    		    $http.get('somministrazioni/bypaziente/'+$routeParams.pazienteId)
+    			.success(function(data) {
+    			    $scope.tableParams1 = createNgTableParams(data, ngTableParams, $filter);
+    			})
+    			.error(function(){ });
+    			
     		}else
     			$scope.pazienteId = "Nuovo";
     		
