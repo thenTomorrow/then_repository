@@ -5,10 +5,13 @@ nursingHomeApp.controller('esami-detail', ['$scope', '$routeParams', '$http', '$
 	
 	$scope.isOpenInfo = true;
 	$scope.isFileDaCaricare = true;
+	$scope.isDocumentoDaCaricare = true;
 	$scope.alertOK = '';
 	$scope.alertKO = '';
 	$scope.alertFileOK = '';
 	$scope.alertFileKO = '';
+	$scope.alertDocumentoOK = '';
+	$scope.alertDocumentoKO = '';
 	$scope.imgPreview;
     $scope.random;
     $scope.esame = {};
@@ -98,6 +101,22 @@ nursingHomeApp.controller('esami-detail', ['$scope', '$routeParams', '$http', '$
     	})
     	.error(function(data, status, headers, config){
     		$scope.alertFileKO = 'Errore nel caricamento dell\'esame';
+    	});
+    };
+    
+    $scope.addDocumento = function(file){
+    	var fd = new FormData();
+    	fd.append('file', file[0]);
+    	$http.post('esami/'+$scope.esame.id+'/addFile', fd,{
+    		transformRequest: angular.identity,
+    		headers: {'Content-Type': undefined}
+    	})
+    	.success(function(data){
+    		$scope.esame = data;
+    		$scope.alertDocumentoOK = 'Documento caricato';
+    	})
+    	.error(function(data, status, headers, config){
+    		$scope.alertDocumentoKO = 'Errore nel caricamento del documento';
     	});
     };
     

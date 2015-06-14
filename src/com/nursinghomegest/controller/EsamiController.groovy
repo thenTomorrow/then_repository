@@ -77,6 +77,7 @@ class EsamiController {
 		sqlService.withSql { sql ->
 			return sql.rows("""select esami.id, esami.paziente_id, CONCAT(paziente.nome,' ',paziente.cognome) as paziente,
 									  esami.descrizione, if(esami.mime_type is null,'non caricata','caricata') as img,
+									  if(esami.file_mime_type is null,'non caricato','caricato') as documento,
 							          esami.data, DATE_FORMAT(esami.data,'%d/%m/%Y') as data_esame 
 							   from esami inner join paziente on paziente.id=esami.paziente_id
 							   order by esami.id desc""")
@@ -175,6 +176,48 @@ class EsamiController {
 							response.setHeader("Content-Disposition", "attachment;")
 							FileCopyUtils.copy(data, response.getOutputStream())
 						}
+					}
+				}
+			}catch(Exception e){
+				log.error("ERRORE DOWNLOAD FILE ID = "+id,e)
+			}
+		}
+	}
+						
+	@RequestMapping(value="/esami/{id}/addFile",  method = RequestMethod.POST)
+	public @ResponseBody Object addFile(@PathVariable("id") Integer id,
+										@RequestParam("file") MultipartFile multipartFile) throws Exception {
+		  sqlService.withSql { sql ->
+			 
+			 def fileIS = multipartFile.getInputStream()
+			 def fileType = multipartFile.getContentType()
+			 def fileName = multipartFile.getOriginalFilename()
+			 
+			  sql.executeUpdate("""
+				  				UPDATE esami 
+				  				SET file_mime_type = ${fileType},
+								  	file = ${fileIS}
+								WHERE id = ${id} """)
+		 }
+		 return getEsame(id)
+	 }
+								
+															
+	 @RequestMapping(value="/esami/{id}/file", method = RequestMethod.GET)
+	 public downloadFile(@PathVariable("id") Integer id,
+						 HttpServletResponse response){
+		sqlService.withSql { sql ->
+			try{
+					sql.query("""SELECT file_mime_type, file FROM esami WHERE id = ${id} LIMIT 1""") {
+					ResultSet res ->
+					if(res.next()){
+						def mimeType =  res.getString(1)
+						def data = res.getBytes(2)				
+						response.setContentType(mimeType)
+						response.setContentLength(data.size())
+						response.setHeader("Content-Disposition", "attachment;")
+						
+						FileCopyUtils.copy(data, response.getOutputStream())
 					}
 				}
 			}catch(Exception e){
