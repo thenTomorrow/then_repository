@@ -32,10 +32,11 @@
 				      		<a ng-href="#pazienti/{{esame.paziente_id}}">{{esame.paziente}}</a>
 				      	</td>
 				      	<td data-title="'Descrizione'" sortable="'descrizione'">{{esame.descrizione}}</td>
-				      	<td data-title="'Scannerizzazione Esame'" sortable="'img'">{{esame.img}}</td>
+				      	<td data-title="'Scannerizzazione'" sortable="'img'">{{esame.img}}</td>
+				      	<td data-title="'Documento'" sortable="'documento'">{{esame.documento}}</td>
 				      	<td data-title="''" class="text-center">
-				      		<button type="button" class="btn btn-warning" ng-click="dettaglio(esame.id)"><i class="glyphicon glyphicon-floppy-disk"></i> Modifica</button>
-				      		<button type="button" class="btn btn-danger" ng-click="cancella(esame.id)"><i class="glyphicon glyphicon-trash"></i>Cancella</button>
+				      		<button type="button" class="btn btn-warning" ng-click="dettaglio(esame.id)"><i class="glyphicon glyphicon-info-sign"></i> Dettagli</button>
+				      		<button type="button" class="btn btn-danger" ng-click="cancella(esame.id)"><i class="glyphicon glyphicon-trash"></i> Cancella</button>
 				      	</td>
 			    	</tr>
 		      	</table>
