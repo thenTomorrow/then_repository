@@ -34,29 +34,7 @@ class ScheduleService {
 		
 		def list = [] 
 		sqlService.withSql { sql ->
-			list = sql.rows("""select t.farmaco_id,
-									  t.farmaco,
-									  t.paziente_id,
-								      t.paziente,
-								      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
-								from
-								(
-								select farmaco.id as farmaco_id, 
-								       farmaco.`descrizione` as farmaco,
-								       paziente.id as paziente_id,	
-								       concat(paziente.nome,' ',paziente.cognome) as paziente,
-									   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
-								       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
-								from 
-								`somministrazione`
-								inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
-								inner join paziente on paziente.id = somministrazione.`paziente_id`
-								where paziente.disabilitato = 0
-								) t
-								group by t.farmaco_id, t.paziente_id
-							    having giorni_rimanenti<=${giorniPreavviso}		
-								order by giorni_rimanenti
-							""")
+			list = sql.rows(getScadenzeQuery(null, null, giorniPreavviso))
 		}
 		
 		if(list) {
@@ -102,5 +80,45 @@ class ScheduleService {
 				logger.error("Errore invio richiesta cliente")
 			}
 		}
+	}
+	
+	public String getScadenzeQuery(Integer pazienteId, Integer farmacoId, String giorniPreavviso) {
+		
+		String query = """select t.farmaco_id,
+								  t.farmaco,
+								  t.paziente_id,
+							      t.paziente,
+							      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
+							from
+							(
+							select farmaco.id as farmaco_id, 
+							       farmaco.`descrizione` as farmaco,
+							       paziente.id as paziente_id,	
+							       concat(paziente.nome,' ',paziente.cognome) as paziente,
+								   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
+							       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
+							from 
+							`somministrazione`
+							inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
+							inner join paziente on paziente.id = somministrazione.`paziente_id` """
+		
+		if(pazienteId==null && farmacoId==null)
+			query+="""where paziente.disabilitato = 0 """
+		else if(pazienteId!=null && farmacoId==null)
+			query+="""where paziente.id = ${pazienteId} """
+		else if(pazienteId==null && farmacoId!=null)
+			query+="""where farmaco.id = ${farmacoId} """
+		else 
+			query+="""where paziente.id = ${pazienteId} and farmaco.id = ${farmacoId} """		
+		
+		query+=""") t
+				group by t.farmaco_id, t.paziente_id """
+		
+	    if(giorniPreavviso!=null)
+			query+="""having giorni_rimanenti<=${giorniPreavviso} """
+				
+		query+="""order by giorni_rimanenti """
+		
+		return query
 	}
 }

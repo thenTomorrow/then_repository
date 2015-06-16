@@ -39,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lowagie.text.pdf.PdfWriter;
+import com.nursinghomegest.service.ScheduleService;
 import com.nursinghomegest.service.SqlService;
 import com.nursinghomegest.util.ControllerUtil;
 import com.nursinghomegest.util.ExportUtil;
@@ -66,32 +67,15 @@ class ReportsController {
 	@Resource(name="sqlService")
 	private SqlService sqlService
 	
+	@Resource(name="scheduleService")
+	private ScheduleService scheduleService
+	
+	
 	@RequestMapping(value="/reports/scadenze", method = RequestMethod.GET)
 	public @ResponseBody Object getScadenze() {
 		
 		sqlService.withSql { sql ->
-			return sql.rows("""select t.farmaco_id,
-									  t.farmaco,
-									  t.paziente_id,
-								      t.paziente,
-								      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
-								from
-								(
-								select farmaco.id as farmaco_id, 
-								       farmaco.`descrizione` as farmaco,
-								       paziente.id as paziente_id,	
-								       concat(paziente.nome,' ',paziente.cognome) as paziente,
-									   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
-								       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
-								from 
-								`somministrazione`
-								inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
-								inner join paziente on paziente.id = somministrazione.`paziente_id`
-								where paziente.disabilitato = 0
-								) t
-								group by t.farmaco_id, t.paziente_id
-								order by giorni_rimanenti
-							""")
+			return sql.rows(scheduleService.getScadenzeQuery(null, null, null))
 		}
 	}
 	
@@ -117,28 +101,7 @@ class ReportsController {
 	public @ResponseBody Object getScadenze(@PathVariable("pazienteId") Integer pazienteId) {
 		
 		sqlService.withSql { sql ->
-		return sql.rows("""select t.farmaco_id,
-								  t.farmaco,
-								  t.paziente_id,
-								  t.paziente,
-							      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
-							from
-							(
-							select farmaco.id as farmaco_id, 
-							       farmaco.`descrizione` as farmaco,
-							       paziente.id as paziente_id,	
-							       concat(paziente.nome,' ',paziente.cognome) as paziente,
-								   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
-							       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
-							from 
-							`somministrazione`
-							inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
-							inner join paziente on paziente.id = somministrazione.`paziente_id`
-							where paziente.id = ${pazienteId}
-							) t
-							group by t.farmaco_id, t.paziente_id
-							order by giorni_rimanenti
-						""")
+			return sql.rows(scheduleService.getScadenzeQuery(pazienteId, null, null))
 		}
 	}
 	
@@ -167,28 +130,7 @@ class ReportsController {
 	public @ResponseBody Object getScadenzeByFarmaco(@PathVariable("farmacoId") Integer farmacoId) {
 		
 		sqlService.withSql { sql ->
-		return sql.rows("""select t.farmaco_id,
-								  t.farmaco,
-								  t.paziente_id,
-								  t.paziente,
-							      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
-							from
-							(
-							select farmaco.id as farmaco_id, 
-							       farmaco.`descrizione` as farmaco,
-							       paziente.id as paziente_id,	
-							       concat(paziente.nome,' ',paziente.cognome) as paziente,
-								   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
-							       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
-							from 
-							`somministrazione`
-							inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
-							inner join paziente on paziente.id = somministrazione.`paziente_id`
-							where farmaco.id = ${farmacoId}
-							) t
-							group by t.farmaco_id, t.paziente_id
-							order by giorni_rimanenti
-						""")
+			return sql.rows(scheduleService.getScadenzeQuery(null, farmacoId, null))
 		}
 	}
 	
