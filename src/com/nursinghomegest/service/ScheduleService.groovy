@@ -88,14 +88,15 @@ class ScheduleService {
 								  t.farmaco,
 								  t.paziente_id,
 							      t.paziente,
-							      round(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)),0) as giorni_rimanenti
+								  sum(t.giorni_durata-t.giorni_passati) as giorni,
+							      sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)) as giorni_rimanenti
 							from
 							(
 							select farmaco.id as farmaco_id, 
 							       farmaco.`descrizione` as farmaco,
 							       paziente.id as paziente_id,	
 							       concat(paziente.nome,' ',paziente.cognome) as paziente,
-								   farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita` as giorni_durata,
+								   round(farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`,0) as giorni_durata,
 							       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
 							from 
 							`somministrazione`
@@ -115,7 +116,7 @@ class ScheduleService {
 				group by t.farmaco_id, t.paziente_id """
 		
 	    if(giorniPreavviso!=null)
-			query+="""having giorni_rimanenti<=${giorniPreavviso} """
+			query+="""having giorni_rimanenti<=${giorniPreavviso} and giorni>=-3 """
 				
 		query+="""order by giorni_rimanenti """
 		
