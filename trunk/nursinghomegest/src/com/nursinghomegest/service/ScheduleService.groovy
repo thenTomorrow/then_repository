@@ -113,11 +113,13 @@ class ScheduleService {
 			query+="""where paziente.id = ${pazienteId} and farmaco.id = ${farmacoId} """		
 		
 		query+=""") t
-				group by t.farmaco_id, t.paziente_id """
+				  group by t.farmaco_id, t.paziente_id """
 		
 	    if(giorniPreavviso!=null)
 			query+="""having giorni_rimanenti<=${giorniPreavviso} and giorni>=-3 """
-				
+		else	
+			query+="""having giorni>=-3 """
+		
 		query+="""order by giorni_rimanenti """
 		
 		return query
