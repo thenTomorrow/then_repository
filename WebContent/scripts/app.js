@@ -93,11 +93,7 @@ var createNgTableParams = function(data, ngTableParams, $filter) {
 			{page: 1, count: 100}, 
 			{total: data.length,
 			 getData: function($defer, params){
-				   		 	var orderedData = params.sorting() ?
-			                                  $filter('orderBy')(data, params.orderBy()) :
-			                                  data;
-			
-			                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-			          }
+				 $defer.resolve(data);
+			 }
             });
 };
