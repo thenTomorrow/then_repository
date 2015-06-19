@@ -71,17 +71,19 @@ class ImpostazioniController {
 	private ImpostazioniService impostazioniService
 	
 	@RequestMapping(value="/impostazioni/{nome}", method = RequestMethod.GET)
-	public @ResponseBody Object getImpostazione(@PathVariable("nome") String nome) {
-		return impostazioniService.getImpostazione(nome)
+	public @ResponseBody Object getImpostazione(HttpServletRequest request, @PathVariable("nome") String nome) {
+		Integer cliente_id = request.getSession().getAttribute("cliente_id")
+		return impostazioniService.getImpostazione(nome, cliente_id)
 	}
 	
 	@RequestMapping(value="/impostazioni",  method = RequestMethod.POST)
-	public @ResponseBody Object insertOrUpdate(@RequestBody Object impostazione) throws Exception {
+	public @ResponseBody Object insertOrUpdate(HttpServletRequest request, @RequestBody Object impostazione) throws Exception {
 		
+		Integer cliente_id = request.getSession().getAttribute("cliente_id")
 		 sqlService.withSql { sql ->
-			sql.execute("""INSERT INTO impostazioni (nome, valore) VALUES(${impostazione.nome}, ${impostazione.valore}) ON DUPLICATE KEY UPDATE    
-						   nome=${impostazione.nome}, valore=${impostazione.valore}""")			
+			 sql.execute("""INSERT INTO impostazioni (nome, valore, cliente_id) VALUES(${impostazione.nome}, ${impostazione.valore}, ${cliente_id}) 
+				 		    ON DUPLICATE KEY UPDATE nome=${impostazione.nome}, valore=${impostazione.valore}, cliente_id=${cliente_id}""")			
 		 }
-		 return getImpostazione(impostazione.nome)
+		 return getImpostazione(request, impostazione.nome)
 	}
 }

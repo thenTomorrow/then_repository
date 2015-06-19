@@ -66,20 +66,26 @@ class EsamiController {
 	private SqlService sqlService
 			
 	@RequestMapping(value="/esami/{id}", method = RequestMethod.GET)
-	public @ResponseBody Object getEsame(@PathVariable("id") Integer id) {
+	public @ResponseBody Object getEsame(HttpServletRequest request, @PathVariable("id") Integer id) {
 		sqlService.withSql { sql ->
-			return sql.firstRow("select * from esami where id = ${id}")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.firstRow("""select esami.* 
+								   from esami
+								   inner join paziente on paziente.id=esami.paziente_id
+						           where esami.id = ${id} and paziente.cliente_id=${cliente_id}""")
 		}
 	}
 	
 	@RequestMapping(value="/esami", method = RequestMethod.GET)
-	public @ResponseBody Object getEsami(){
+	public @ResponseBody Object getEsami(HttpServletRequest request){
 		sqlService.withSql { sql ->
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			return sql.rows("""select esami.id, esami.paziente_id, CONCAT(paziente.nome,' ',paziente.cognome) as paziente,
 									  esami.descrizione, if(esami.mime_type is null,'non caricata','caricata') as img,
 									  if(esami.file_mime_type is null,'non caricato','caricato') as documento,
 							          esami.data, DATE_FORMAT(esami.data,'%d/%m/%Y') as data_esame 
 							   from esami inner join paziente on paziente.id=esami.paziente_id
+							   where paziente.cliente_id=${cliente_id}
 							   order by esami.data desc""")
 		}
 	}
@@ -87,34 +93,34 @@ class EsamiController {
 	@RequestMapping(value="/esami.csv", method = RequestMethod.GET)
 	public void getEsamiCsv(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getEsami()), "esami."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getEsami(request)), "esami."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/esami.xls", method = RequestMethod.GET)
 	public void getEsamiXls(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getEsami()), "esami."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getEsami(request)), "esami."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/esami.pdf", method = RequestMethod.GET)
 	public void getEsamiPdf(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getEsami()), "esami."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getEsami(request)), "esami."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
 	@RequestMapping(value="/esami",  method = RequestMethod.PUT)
-	public @ResponseBody Object insert(@RequestBody Object esame) throws Exception {
+	public @ResponseBody Object insert(HttpServletRequest request, @RequestBody Object esame) throws Exception {
 		sqlService.withSql { sql ->
 			
 			def res = sql.executeInsert("""INSERT INTO esami(paziente_id,descrizione,data)
 									        VALUES(${esame.paziente_id},${esame.descrizione},${esame.data})""")
 			def id = (res[0][0]).intValue()
-			return getEsame(id)
+			return getEsame(request, id)
 		}
 	}
 	
 	@RequestMapping(value="/esami/{id}",  method = RequestMethod.POST)
-	public @ResponseBody Object edit(@PathVariable("id") Integer id, @RequestBody Object esame) throws Exception {
+	public @ResponseBody Object edit(HttpServletRequest request, @PathVariable("id") Integer id, @RequestBody Object esame) throws Exception {
 		sqlService.withSql { sql ->
 		
 			def res = sql.executeUpdate("""UPDATE esami 
@@ -123,12 +129,13 @@ class EsamiController {
 											   data = ${esame.data}
 										   WHERE id = ${id} """)			
 		}
-		return getEsame(id)
+		return getEsame(request, id)
 	}
 	
 	@RequestMapping(value="/esami/{id}/add",  method = RequestMethod.POST)
-	public @ResponseBody Object addImg(@PathVariable("id") Integer id, 
-									    @RequestParam("file") MultipartFile multipartFile) throws Exception {
+	public @ResponseBody Object addImg(HttpServletRequest request,
+									   @PathVariable("id") Integer id, 
+									   @RequestParam("file") MultipartFile multipartFile) throws Exception {
 		sqlService.withSql { sql ->
 			
 			def fileIS = multipartFile.getInputStream()
@@ -142,12 +149,12 @@ class EsamiController {
 								WHERE id = ${id} """)
 			}
 		}
-		return getEsame(id)
+		return getEsame(request, id)
 	}
 	
 	@RequestMapping(value="/esami/{id}",  method = RequestMethod.DELETE)
-	public @ResponseBody Object delete(@PathVariable("id") Integer id) throws Exception {
-		def esame = getEsame(id)
+	public @ResponseBody Object delete(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
+		def esame = getEsame(request, id)
 		sqlService.withSql { sql ->
 			sql.execute("""DELETE FROM esami WHERE id = ${id}""")
 			return esame
@@ -185,7 +192,8 @@ class EsamiController {
 	}
 						
 	@RequestMapping(value="/esami/{id}/addFile",  method = RequestMethod.POST)
-	public @ResponseBody Object addFile(@PathVariable("id") Integer id,
+	public @ResponseBody Object addFile(HttpServletRequest request,
+										@PathVariable("id") Integer id,
 										@RequestParam("file") MultipartFile multipartFile) throws Exception {
 		  sqlService.withSql { sql ->
 			 
@@ -199,7 +207,7 @@ class EsamiController {
 								  	file = ${fileIS}
 								WHERE id = ${id} """)
 		 }
-		 return getEsame(id)
+		 return getEsame(request, id)
 	 }
 								
 															

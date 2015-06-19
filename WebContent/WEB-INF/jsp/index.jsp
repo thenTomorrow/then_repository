@@ -1,11 +1,11 @@
 <!doctype html>
-<html ng-app="nursingHomeApp">
+<html ng-app="nursingHomeApp" ng-controller="HeaderController">
 	<head>
-		<title>Residenza per anziani Maria Madre della Fiducia</title>
+		<title>{{intestazione}}</title>
 		<meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<link rel="icon" type="image/png" href="img/logo.png" />
+		<link rel="icon" type="image/png" href="img/{{nome}}.png" />
 		
 		<script src="js/jquery-2.1.4.min.js" ></script>
 		<script src="js/angular.min.js" ></script>
@@ -49,7 +49,7 @@
 	          		<a class="navbar-brand" href="#"><span class="navbar-item">Admin</span></a>
 	          	</div>
 	        	<div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
-	        		<ul class="nav navbar-nav" ng-click="navCollapsed=true" ng-controller="HeaderController">
+	        		<ul class="nav navbar-nav" ng-click="navCollapsed=true">
 		            	<li ng-class="{active:($location.path().indexOf('/pazienti')!=-1)}"><a href="#pazienti"><i class="glyphicon glyphicon-user"></i> <span class="menu-item">Pazienti</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/farmaci')!=-1)}"><a href="#farmaci"><i class="glyphicon glyphicon-inbox"></i> <span class="menu-item">Farmaci</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/somministrazioni')!=-1)}"><a href="#somministrazioni"><i class="glyphicon glyphicon-hand-right"></i> <span class="menu-item">Somministrazioni</span></a></li>
@@ -70,8 +70,17 @@
       		</div>
     	</div>
     	<script>		
-		function HeaderController($scope, $location) {
+		function HeaderController($scope, $location, $http) {
 			$scope.$location = $location;
+			$scope.intestazione = '';
+			$scope.indirizzo = '';
+			$http.get('cliente')
+			.success(function(data) {
+			    $scope.intestazione = data.denominazione;
+			    $scope.indirizzo = data.indirizzo;
+			})
+			.error(function(){ });
+			
 		}
 		</script>
 	    <center>
@@ -82,8 +91,8 @@
 		<div style="padding: 2px;" ng-view ng-show="!loadingRoot"></div>
 		<div class="footer">
 	    	<div class="container" style="text-align: center;">
-	        	<p class="text-muted">Residenza per anziani Maria Madre della Fiducia</p>
-	        	<p class="text-muted">Contrada Scaro 1 - 97016 Pozzallo (RG) | Via Unita' D'Italia 932 - 97016 Pozzallo (RG)</p>
+	        	<p class="text-muted">{{intestazione}}</p>
+	        	<p class="text-muted">{{indirizzo}}</p>
 	        	<p class="text-muted">© Tutti i diritti riservati</p>
 	      	</div>
 	    </div>

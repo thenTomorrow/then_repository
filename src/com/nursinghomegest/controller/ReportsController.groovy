@@ -72,36 +72,38 @@ class ReportsController {
 	
 	
 	@RequestMapping(value="/reports/scadenze", method = RequestMethod.GET)
-	public @ResponseBody Object getScadenze() {
+	public @ResponseBody Object getScadenze(HttpServletRequest request) {
 		
 		sqlService.withSql { sql ->
-			return sql.rows(scheduleService.getScadenzeQuery(null, null, null))
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.rows(scheduleService.getScadenzeQuery(null, null, cliente_id, null))
 		}
 	}
 	
 	@RequestMapping(value="/reports/scadenze.csv", method = RequestMethod.GET)
 	public void getScadenzeCsv(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenze()), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenze(request)), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/reports/scadenze.xls", method = RequestMethod.GET)
 	public void getScadenzeXls(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenze()), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenze(request)), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/reports/scadenze.pdf", method = RequestMethod.GET)
 	public void getScadenzePdf(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenze()), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenze(request)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
 	@RequestMapping(value="/reports/scadenze/{pazienteId}", method = RequestMethod.GET)
-	public @ResponseBody Object getScadenze(@PathVariable("pazienteId") Integer pazienteId) {
+	public @ResponseBody Object getScadenze(HttpServletRequest request, @PathVariable("pazienteId") Integer pazienteId) {
 		
 		sqlService.withSql { sql ->
-			return sql.rows(scheduleService.getScadenzeQuery(pazienteId, null, null))
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.rows(scheduleService.getScadenzeQuery(pazienteId, null, cliente_id, null))
 		}
 	}
 	
@@ -109,28 +111,29 @@ class ReportsController {
 	public void getScadenzeCsv(@PathVariable("pazienteId") Integer pazienteId, 
 							   HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenze(pazienteId)), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenze(request, pazienteId)), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/reports/{pazienteId}/scadenze.xls", method = RequestMethod.GET)
 	public void getScadenzeXls(@PathVariable("pazienteId") Integer pazienteId, 
 							   HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenze(pazienteId)), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenze(request, pazienteId)), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/reports/{pazienteId}/scadenze.pdf", method = RequestMethod.GET)
 	public void getScadenzePdf(@PathVariable("pazienteId") Integer pazienteId, 
 							   HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenze(pazienteId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenze(request, pazienteId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 							   
 	@RequestMapping(value="/reports/scadenze/byfarmaco/{farmacoId}", method = RequestMethod.GET)
-	public @ResponseBody Object getScadenzeByFarmaco(@PathVariable("farmacoId") Integer farmacoId) {
+	public @ResponseBody Object getScadenzeByFarmaco(HttpServletRequest request, @PathVariable("farmacoId") Integer farmacoId) {
 		
 		sqlService.withSql { sql ->
-			return sql.rows(scheduleService.getScadenzeQuery(null, farmacoId, null))
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.rows(scheduleService.getScadenzeQuery(null, farmacoId, cliente_id, null))
 		}
 	}
 	
@@ -138,20 +141,20 @@ class ReportsController {
 	public void getScadenzeByFarmacoCsv(@PathVariable("farmacoId") Integer farmacoId, 
 							  			HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenzeByFarmaco(farmacoId)), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getScadenzeByFarmaco(request, farmacoId)), "scadenze."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/reports/byfarmaco/{farmacoId}/scadenze.xls", method = RequestMethod.GET)
 	public void getScadenzeByFarmacoXls(@PathVariable("farmacoId") Integer farmacoId, 
 										HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenzeByFarmaco(farmacoId)), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getScadenzeByFarmaco(request, farmacoId)), "scadenze."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/reports/byfarmaco/{farmacoId}/scadenze.pdf", method = RequestMethod.GET)
 	public void getScadenzeByFarmacoPdf(@PathVariable("farmacoId") Integer farmacoId, 
 										HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenzeByFarmaco(farmacoId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenzeByFarmaco(request, farmacoId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 }
