@@ -35,18 +35,21 @@ class ScheduleService {
 			clienti = sql.rows("select * from cliente")
 		}
 		
-		list.each { cliente_id ->
-			String giorniPreavviso = impostazioniService.getImpostazione("numero_giorni", cliente_id)
-			String[] mailTo = impostazioniService.getImpostazione("email_scadenze", cliente_id).split(",")	
+		clienti.each { cliente ->
+			String giorniPreavviso = impostazioniService.getImpostazione("numero_giorni", cliente.id)
+			String mailToList = impostazioniService.getImpostazione("email_scadenze", cliente.id)
+			String[] mailTo = mailToList!=null?mailToList.split(","):null	
 			
-			def list = [] 
-			sqlService.withSql { sql ->
-				list = sql.rows(getScadenzeQuery(null, null, cliente_id, giorniPreavviso))
+			def list = []
+			if(giorniPreavviso!=null && mailTo!=null) {
+				sqlService.withSql { sql ->
+					list = sql.rows(getScadenzeQuery(null, null, cliente.id, giorniPreavviso))
+				}
 			}
 			
 			if(list) {
 			
-				String subject = "Scadenze Farmaci - Residenza per anziani Maria Madre della Fiducia"
+				String subject = "Scadenze Farmaci - "+cliente.denominazione;
 				String messaggio = """<style type='text/css'> table.altrowstable { font-family: verdana,arial,sans-serif; font-size:11px; color:#333333;  
 								   	  border-width: 1px; border-color: #a9c6c9;  border-collapse: collapse;}  
 								   	  table.altrowstable th { border-width: 1px; padding: 8px; border-style: solid; border-color: #a9c6c9;  text-align: left;} 
@@ -81,10 +84,10 @@ class ScheduleService {
 							.from("then.poidomani@gmail.com")
 							.message()
 							)
-					logger.info("Inviata richiesta cliente "+cliente_id)
+					logger.info("Inviata richiesta cliente "+cliente.id)
 					
 				}catch(Exception e) {
-					logger.error("Errore invio richiesta cliente "+cliente_id)
+					logger.error("Errore invio richiesta cliente "+cliente.id)
 				}
 			}
 		}
