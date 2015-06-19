@@ -27,7 +27,9 @@
 	 		<div class="table-responsive">
 		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
 			    	<tr ng-repeat="farmaco in $data | filter:query">
-				      	<td data-title="'Descrizione'" sortable="'descrizione'">{{farmaco.descrizione}}</td>
+				      	<td data-title="'Descrizione'" sortable="'descrizione'">
+				      		<a ng-href="#farmaci/{{farmaco.id}}">{{farmaco.descrizione}}</a>
+				      	</td>
 				      	<td data-title="'Quantit&agrave; per pezzo'" sortable="'quantita_per_pezzo'" class="text-right">{{farmaco.quantita_per_pezzo}}</td>
 				      	<td data-title="''" class="text-center">
 				      		<button type="button" class="btn btn-primary" ng-click="dettaglio(farmaco.id)"><i class="glyphicon glyphicon-info-sign"></i> Dettagli</button>

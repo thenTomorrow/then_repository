@@ -80,7 +80,7 @@ class EsamiController {
 									  if(esami.file_mime_type is null,'non caricato','caricato') as documento,
 							          esami.data, DATE_FORMAT(esami.data,'%d/%m/%Y') as data_esame 
 							   from esami inner join paziente on paziente.id=esami.paziente_id
-							   order by esami.id desc""")
+							   order by esami.data desc""")
 		}
 	}
 	

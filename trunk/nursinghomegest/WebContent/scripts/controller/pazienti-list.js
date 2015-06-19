@@ -7,7 +7,7 @@ nursingHomeApp.controller('pazienti-list', ['$scope', '$http', '$location', '$fi
 	
     $http.get('pazientiAll/')
 	.success(function(data) {
-	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter);
+	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter, {nome: 'asc'});
 	    $rootScope.loadingRoot = false;
 	})
 	.error(function(){ });

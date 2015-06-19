@@ -40,8 +40,12 @@
 	 		<div class="table-responsive">
 		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
 			    	<tr ng-repeat="paziente in $data | filter:query | filter:selectedStato">
-				      	<td data-title="'Nome'" sortable="'nome'">{{paziente.nome}}</td>
-				      	<td data-title="'Cognome'" sortable="'cognome'">{{paziente.cognome}}</td>
+				      	<td data-title="'Nome'" sortable="'nome'">
+				      		<a ng-href="#pazienti/{{paziente.id}}">{{paziente.nome}}</a>
+				      	</td>
+				      	<td data-title="'Cognome'" sortable="'cognome'">
+				      		<a ng-href="#pazienti/{{paziente.id}}">{{paziente.cognome}}</a>
+				      	</td>
 				      	<td data-title="'Data di nascita'" sortable="'data_nascita'">{{paziente.data_nascita}} <span ng-show="paziente.comune_nascita!=null">a {{paziente.comune_nascita}}</span></td>
 				      	<td data-title="'Medico curante'" sortable="'medico_curante'">{{paziente.medico_curante}}</td>
 				      	<td data-title="'Stato'" sortable="'stato'">

@@ -7,7 +7,7 @@ nursingHomeApp.controller('somministrazioni-list', ['$scope', '$http', '$locatio
 	
     $http.get('somministrazioni/')
 	.success(function(data) {
-	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter);
+	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter, {data_inserimento: 'desc'});
 	    $rootScope.loadingRoot = false;
 	})
 	.error(function(){ });
