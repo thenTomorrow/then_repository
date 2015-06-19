@@ -1,11 +1,11 @@
 <!doctype html>
 <html ng-app>
 	<head>
-		<title>Residenza per anziani Maria Madre della Fiducia</title>
+		<title>Area Privata NursingHome</title>
   		<meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<link rel="icon" type="image/png" href="img/logo.png" />
+		<link rel="icon" type="image/png" href="img/madonnadellafiducia.png" />
 		
 		<script src="js/jquery-2.1.4.min.js" ></script>
 		<script src="js/angular.min.js" ></script>
@@ -27,7 +27,7 @@
 				<div class="panel-body">
 			      	<form class="form-signin" ng-submit="login()" autocomplete="on">
 						<div class="logo">	
-							<img src="img/logo.png" width="300px">
+							<img src="img/madonnadellafiducia.png" width="300px">
 						</div>
 						<br/>
 			        	<div class="alert alert-danger alert-dismissable" ng-show="alert!=''" >

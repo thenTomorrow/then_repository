@@ -65,65 +65,68 @@ class FarmaciController {
 	private SqlService sqlService
 			
 	@RequestMapping(value="/farmaci/{id}", method = RequestMethod.GET)
-	public @ResponseBody Object getFarmaco(@PathVariable("id") Integer id) {
+	public @ResponseBody Object getFarmaco(HttpServletRequest request, @PathVariable("id") Integer id) {
 		sqlService.withSql { sql ->
-			return sql.firstRow("select id, descrizione, quantita_per_pezzo from farmaco where id = ${id}")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.firstRow("select id, descrizione, quantita_per_pezzo from farmaco where id = ${id} and cliente_id = ${cliente_id}")
 		}
 	}
 	
 	@RequestMapping(value="/farmaci", method = RequestMethod.GET)
-	public @ResponseBody Object getFarmaci(){
+	public @ResponseBody Object getFarmaci(HttpServletRequest request){
 		sqlService.withSql { sql ->
-			return sql.rows("select id, descrizione, quantita_per_pezzo from farmaco order by descrizione")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.rows("select id, descrizione, quantita_per_pezzo from farmaco where cliente_id = ${cliente_id} order by descrizione")
 		}
 	}
 	
 	@RequestMapping(value="/farmaci.csv", method = RequestMethod.GET)
 	public void getFarmaciCsv(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getFarmaci()), "farmaci."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getFarmaci(request)), "farmaci."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/farmaci.xls", method = RequestMethod.GET)
 	public void getFarmaciXls(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getFarmaci()), "farmaci."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getFarmaci(request)), "farmaci."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/farmaci.pdf", method = RequestMethod.GET)
 	public void getFarmaciPdf(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getFarmaci()), "farmaci."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getFarmaci(request)), "farmaci."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
 	@RequestMapping(value="/farmaci",  method = RequestMethod.PUT)
-	public @ResponseBody Object insert(@RequestBody Object farmaco) throws Exception {
+	public @ResponseBody Object insert(HttpServletRequest request, @RequestBody Object farmaco) throws Exception {
 		sqlService.withSql { sql ->
-			
-			def res = sql.executeInsert("""INSERT INTO farmaco(descrizione,quantita_per_pezzo)
-									       VALUES(${farmaco.descrizione},${farmaco.quantita_per_pezzo})""")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			def res = sql.executeInsert("""INSERT INTO farmaco(descrizione,quantita_per_pezzo,cliente_id)
+									       VALUES(${farmaco.descrizione},${farmaco.quantita_per_pezzo},${cliente_id})""")
 			def id = (res[0][0]).intValue()
-			return getFarmaco(id)
+			return getFarmaco(request, id)
 		}
 	}
 	
 	@RequestMapping(value="/farmaci/{id}",  method = RequestMethod.POST)
-	public @ResponseBody Object edit(@PathVariable("id") Integer id, @RequestBody Object farmaco) throws Exception {
+	public @ResponseBody Object edit(HttpServletRequest request, @PathVariable("id") Integer id, @RequestBody Object farmaco) throws Exception {
 		sqlService.withSql { sql ->
-		
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			def res = sql.executeUpdate("""UPDATE farmaco 
 									       SET descrizione = ${farmaco.descrizione},
 										   	   quantita_per_pezzo = ${farmaco.quantita_per_pezzo}
-										   WHERE id = ${id} """)			
+										   WHERE id = ${id} and cliente_id = ${cliente_id}""")			
 		}
-		return getFarmaco(id)
+		return getFarmaco(request, id)
 	}
 	
 	@RequestMapping(value="/farmaci/{id}",  method = RequestMethod.DELETE)
-	public @ResponseBody Object delete(@PathVariable("id") Integer id) throws Exception {
-		def farmaco = getFarmaco(id)
+	public @ResponseBody Object delete(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
+		def farmaco = getFarmaco(request, id)
 		sqlService.withSql { sql ->
-			sql.execute("""DELETE FROM farmaco WHERE id = ${id}""")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			sql.execute("""DELETE FROM farmaco WHERE id = ${id} and cliente_id = ${cliente_id}""")
 			return farmaco
 		}
 	}

@@ -63,12 +63,13 @@ class RootController {
 		def utente=false
 		
 		try{
-			def isUser;
+			def userObj;
 			sqlService.withSql { sql ->
-				isUser = sql.firstRow("select username from utenti where username = ${user.username} and password = ${user.password}")
+				userObj = sql.firstRow("select username, cliente_id from utenti where username = ${user.username} and password = ${user.password}")
 			}
-			if(isUser){
+			if(userObj){
 				request.setUserPrincipal(user.username)
+				request.getSession(true).setAttribute("cliente_id", userObj.cliente_id)
 				utente=true
 				log.info "LOGIN SUCCESS ${user.username}"				
 			}
@@ -80,6 +81,14 @@ class RootController {
 			log.error "LOGIN EXCEPTION ${user.username}", e
 		}
 		return utente
+	}
+	
+	@RequestMapping(value="/cliente", method = RequestMethod.GET) 
+	public @ResponseBody Object cliente(HttpServletRequest request) {
+		Integer cliente_id = request.getSession().getAttribute("cliente_id")
+		sqlService.withSql { sql ->
+			return sql.firstRow("select * from cliente where id = ${cliente_id}")
+		}
 	}
 	
 	@RequestMapping(value="/logout", method = RequestMethod.GET)

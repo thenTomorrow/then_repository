@@ -65,17 +65,21 @@ class SomministrazioniController {
 	private SqlService sqlService
 			
 	@RequestMapping(value="/somministrazioni/{id}", method = RequestMethod.GET)
-	public @ResponseBody Object getSomministrazione(@PathVariable("id") Integer id) {
+	public @ResponseBody Object getSomministrazione(HttpServletRequest request, @PathVariable("id") Integer id) {
 		sqlService.withSql { sql ->
-			return sql.firstRow("""select id, farmaco_id, paziente_id, quantita, data_inserimento, data_inizio 
-								   from somministrazione 
-								   where id = ${id}""")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.firstRow("""select somministrazione.id, somministrazione.farmaco_id, somministrazione.paziente_id, somministrazione.quantita, somministrazione.data_inserimento, somministrazione.data_inizio 
+								   from somministrazione
+								   inner join paziente on paziente.id = somministrazione.paziente_id
+								   inner join farmaco on farmaco.id = somministrazione.farmaco_id
+								   where id = ${id} and paziente.cliente_id=${cliente_id} and farmaco.cliente_id=${cliente_id}""")
 		}
 	}
 	
 	@RequestMapping(value="/somministrazioni", method = RequestMethod.GET)
-	public @ResponseBody Object getSomministrazioni(){
+	public @ResponseBody Object getSomministrazioni(HttpServletRequest request){
 		sqlService.withSql { sql ->
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			return sql.rows("""select somministrazione.id, 
 									  farmaco.id as farmaco_id,
 									  farmaco.descrizione as farmaco,
@@ -91,6 +95,7 @@ class SomministrazioniController {
 							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
 							   where paziente.disabilitato = 0
 							   and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=0
+							   and paziente.cliente_id=${cliente_id} and farmaco.cliente_id=${cliente_id}
 							   order by somministrazione.data_inserimento desc""")
 		}
 	}
@@ -98,24 +103,25 @@ class SomministrazioniController {
 	@RequestMapping(value="/somministrazioni.csv", method = RequestMethod.GET)
 	public void getFarmaciCsv(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getSomministrazioni()), "somministrazioni."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getSomministrazioni(request)), "somministrazioni."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/somministrazioni.xls", method = RequestMethod.GET)
 	public void getFarmaciXls(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getSomministrazioni()), "somministrazioni."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getSomministrazioni(request)), "somministrazioni."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/somministrazioni.pdf", method = RequestMethod.GET)
 	public void getFarmaciPdf(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getSomministrazioni()), "somministrazioni."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getSomministrazioni(request)), "somministrazioni."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
 	@RequestMapping(value="/somministrazioni/bypaziente/{pazienteId}", method = RequestMethod.GET)
-	public @ResponseBody Object getSomministrazioni(@PathVariable("pazienteId") Integer pazienteId){
+	public @ResponseBody Object getSomministrazioni(HttpServletRequest request, @PathVariable("pazienteId") Integer pazienteId){
 		sqlService.withSql { sql ->
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			return sql.rows("""select somministrazione.id, 
 									farmaco.id as farmaco_id,
 									farmaco.descrizione as farmaco,
@@ -132,6 +138,7 @@ class SomministrazioniController {
 								where paziente.disabilitato = 0
 								and paziente.id = ${pazienteId}
 								and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=0
+								and paziente.cliente_id=${cliente_id} and farmaco.cliente_id=${cliente_id}
 								order by somministrazione.data_inserimento desc""")
 		}
 	}
@@ -139,19 +146,19 @@ class SomministrazioniController {
 	@RequestMapping(value="/somministrazioni/{pazienteId}/somministrazioni.csv", method = RequestMethod.GET)
 	public void getFarmaciCsv(HttpServletRequest request, HttpServletResponse response, @PathVariable("pazienteId") Integer pazienteId){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getSomministrazioni(pazienteId)), "somministrazioni."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getSomministrazioni(request, pazienteId)), "somministrazioni."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/somministrazioni/{pazienteId}/somministrazioni.xls", method = RequestMethod.GET)
 	public void getFarmaciXls(HttpServletRequest request, HttpServletResponse response, @PathVariable("pazienteId") Integer pazienteId){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getSomministrazioni(pazienteId)), "somministrazioni."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getSomministrazioni(request, pazienteId)), "somministrazioni."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/somministrazioni/{pazienteId}/somministrazioni.pdf", method = RequestMethod.GET)
 	public void getFarmaciPdf(HttpServletRequest request, HttpServletResponse response, @PathVariable("pazienteId") Integer pazienteId){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getSomministrazioni(pazienteId)), "somministrazioni."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getSomministrazioni(request, pazienteId)), "somministrazioni."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
 	@RequestMapping(value="/somministrazioni",  method = RequestMethod.PUT)
@@ -192,8 +199,8 @@ class SomministrazioniController {
 	}
 	
 	@RequestMapping(value="/somministrazioni/{id}",  method = RequestMethod.DELETE)
-	public @ResponseBody Object delete(@PathVariable("id") Integer id) throws Exception {
-		def somministrazione = getSomministrazione(id)
+	public @ResponseBody Object delete(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
+		def somministrazione = getSomministrazione(request, id)
 		sqlService.withSql { sql ->
 			sql.execute("""DELETE FROM somministrazione WHERE id = ${id}""")
 			sql.execute("""CALL update_data_inizio_params(${somministrazione.paziente_id},${somministrazione.farmaco_id})""")

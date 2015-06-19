@@ -65,8 +65,9 @@ class PazientiController {
 	private SqlService sqlService
 			
 	@RequestMapping(value="/pazienti/{id}", method = RequestMethod.GET)
-	public @ResponseBody Object getPaziente(@PathVariable("id") Integer id) {
+	public @ResponseBody Object getPaziente(HttpServletRequest request, @PathVariable("id") Integer id) {
 		sqlService.withSql { sql ->
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			return sql.firstRow("""select id, 
 										  nome, 
 										  cognome,
@@ -80,13 +81,14 @@ class PazientiController {
 										  disabilitato,
 										  if(disabilitato=0,'PRESENTE','ASSENTE') stato 
 								   from paziente 
-								   where id = ${id}""")
+								   where cliente_id = ${cliente_id} and id = ${id}""")
 		}
 	}
 	
 	@RequestMapping(value="/pazienti", method = RequestMethod.GET)
-	public @ResponseBody Object getPazienti(){
+	public @ResponseBody Object getPazienti(HttpServletRequest request){
 		sqlService.withSql { sql ->
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			return sql.rows("""select id, 
 									  nome, 
 									  cognome,
@@ -100,64 +102,66 @@ class PazientiController {
 									  disabilitato,
 									  if(disabilitato=0,'PRESENTE','ASSENTE') stato
 							   from paziente 
-							   where disabilitato = 0 
+							   where disabilitato = 0 and cliente_id = ${cliente_id}
 							   order by nome, cognome""")
 		}
 	}
 	
 	@RequestMapping(value="/pazientiAll", method = RequestMethod.GET)
-	public @ResponseBody Object getPazientiAll(){
+	public @ResponseBody Object getPazientiAll(HttpServletRequest request){
 		sqlService.withSql { sql ->
-		return sql.rows("""select id, 
-								  nome, 
-								  cognome,
-								  cf, 
-								  comune_nascita, 
-								  DATE_FORMAT(data_nascita,'%d/%m/%Y') data_nascita,
-								  comune_residenza,
-								  indirizzo_residenza,
-								  medico_curante,
-								  esenzione_ticket,
-								  disabilitato,
-								  if(disabilitato=0,'PRESENTE','ASSENTE') stato
-						   from paziente 
-						   order by nome, cognome""")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.rows("""select id, 
+									  nome, 
+									  cognome,
+									  cf, 
+									  comune_nascita, 
+									  DATE_FORMAT(data_nascita,'%d/%m/%Y') data_nascita,
+									  comune_residenza,
+									  indirizzo_residenza,
+									  medico_curante,
+									  esenzione_ticket,
+									  disabilitato,
+									  if(disabilitato=0,'PRESENTE','ASSENTE') stato
+							   from paziente 
+							   where cliente_id = ${cliente_id}
+							   order by nome, cognome""")
 		}
 	}
 	
 	@RequestMapping(value="/pazienti.csv", method = RequestMethod.GET)
 	public void getPazientiCsv(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getPazienti()), "pazienti."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getPazienti(request)), "pazienti."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
 	}
 	
 	@RequestMapping(value="/pazienti.xls", method = RequestMethod.GET)
 	public void getPazientiXls(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getPazienti()), "pazienti."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getPazienti(request)), "pazienti."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
 	}
 	
 	@RequestMapping(value="/pazienti.pdf", method = RequestMethod.GET)
 	public void getPazientiPdf(HttpServletRequest request, HttpServletResponse response){
 		
-		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getPazienti()), "pazienti."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getPazienti(request)), "pazienti."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 	
 	@RequestMapping(value="/pazienti",  method = RequestMethod.PUT)
-	public @ResponseBody Object insert(@RequestBody Object paziente) throws Exception {
+	public @ResponseBody Object insert(HttpServletRequest request, @RequestBody Object paziente) throws Exception {
 		sqlService.withSql { sql ->
-			
-			def res = sql.executeInsert("""INSERT INTO paziente(nome,cognome,cf,comune_nascita,data_nascita,comune_residenza,indirizzo_residenza,medico_curante,esenzione_ticket)
-									       VALUES(${paziente.nome},${paziente.cognome},${paziente.cf},${paziente.comune_nascita},${paziente.data_nascita},${paziente.comune_residenza},${paziente.indirizzo_residenza},${paziente.medico_curante},${paziente.esenzione_ticket})""")
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			def res = sql.executeInsert("""INSERT INTO paziente(nome,cognome,cf,comune_nascita,data_nascita,comune_residenza,indirizzo_residenza,medico_curante,esenzione_ticket,cliente_id)
+									       VALUES(${paziente.nome},${paziente.cognome},${paziente.cf},${paziente.comune_nascita},${paziente.data_nascita},${paziente.comune_residenza},${paziente.indirizzo_residenza},${paziente.medico_curante},${paziente.esenzione_ticket},${cliente_id})""")
 			def id = (res[0][0]).intValue()
-			return getPaziente(id)
+			return getPaziente(request, id)
 		}
 	}
 	
 	@RequestMapping(value="/pazienti/{id}",  method = RequestMethod.POST)
-	public @ResponseBody Object edit(@PathVariable("id") Integer id, @RequestBody Object paziente) throws Exception {
+	public @ResponseBody Object edit(HttpServletRequest request, @PathVariable("id") Integer id, @RequestBody Object paziente) throws Exception {
 		sqlService.withSql { sql ->
-		
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			def res = sql.executeUpdate("""UPDATE paziente 
 									       SET nome = ${paziente.nome},
 										   	   cognome = ${paziente.cognome},
@@ -168,30 +172,30 @@ class PazientiController {
 											   indirizzo_residenza = ${paziente.indirizzo_residenza},
 											   medico_curante = ${paziente.medico_curante},
 											   esenzione_ticket = ${paziente.esenzione_ticket}
-										   WHERE id = ${id} """)			
+										   WHERE id = ${id} and cliente_id = ${cliente_id}""")			
 		}
-		return getPaziente(id)
+		return getPaziente(request, id)
 	}
 	
 	@RequestMapping(value="/pazienti/{id}/disabilita",  method = RequestMethod.DELETE)
-	public @ResponseBody Object disabilita(@PathVariable("id") Integer id) throws Exception {
+	public @ResponseBody Object disabilita(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
 		sqlService.withSql { sql ->
-		
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			def res = sql.executeUpdate("""UPDATE paziente 
 									       SET disabilitato = 1
-										   WHERE id = ${id} """)			
+										   WHERE id = ${id} and cliente_id = ${cliente_id}""")			
 		}
-		return getPaziente(id)
+		return getPaziente(request, id)
 	}
 	
 	@RequestMapping(value="/pazienti/{id}/riabilita",  method = RequestMethod.DELETE)
-	public @ResponseBody Object riabilita(@PathVariable("id") Integer id) throws Exception {
+	public @ResponseBody Object riabilita(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
 		sqlService.withSql { sql ->
-		
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			def res = sql.executeUpdate("""UPDATE paziente 
 									   	   SET disabilitato = 0
-									       WHERE id = ${id} """)			
+									       WHERE id = ${id} and cliente_id = ${cliente_id}""")			
 		}
-		return getPaziente(id)
+		return getPaziente(request, id)
 	}
 }
