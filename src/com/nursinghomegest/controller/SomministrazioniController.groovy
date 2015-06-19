@@ -91,7 +91,7 @@ class SomministrazioniController {
 							   inner join farmaco on farmaco.id = somministrazione.farmaco_id
 							   where paziente.disabilitato = 0
 							   and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=0
-							   order by somministrazione.id desc""")
+							   order by somministrazione.data_inserimento desc""")
 		}
 	}
 	
@@ -116,23 +116,23 @@ class SomministrazioniController {
 	@RequestMapping(value="/somministrazioni/bypaziente/{pazienteId}", method = RequestMethod.GET)
 	public @ResponseBody Object getSomministrazioni(@PathVariable("pazienteId") Integer pazienteId){
 		sqlService.withSql { sql ->
-		return sql.rows("""select somministrazione.id, 
-							farmaco.id as farmaco_id,
-							farmaco.descrizione as farmaco,
-							paziente.id as paziente_id,
-							concat(paziente.nome,' ',paziente.cognome) as paziente,
-							somministrazione.quantita, 
-							DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento_string,
-							somministrazione.data_inserimento,
-							DATE_FORMAT(somministrazione.data_inizio,'%d/%m/%Y') as data_inizio_string,
-							somministrazione.data_inizio
-							from somministrazione
-							inner join paziente on paziente.id = somministrazione.paziente_id
-							inner join farmaco on farmaco.id = somministrazione.farmaco_id
-							where paziente.disabilitato = 0
-							and paziente.id = ${pazienteId}
-							and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=0
-							order by somministrazione.id desc""")
+			return sql.rows("""select somministrazione.id, 
+									farmaco.id as farmaco_id,
+									farmaco.descrizione as farmaco,
+									paziente.id as paziente_id,
+									concat(paziente.nome,' ',paziente.cognome) as paziente,
+									somministrazione.quantita, 
+									DATE_FORMAT(somministrazione.data_inserimento,'%d/%m/%Y') as data_inserimento_string,
+									somministrazione.data_inserimento,
+									DATE_FORMAT(somministrazione.data_inizio,'%d/%m/%Y') as data_inizio_string,
+									somministrazione.data_inizio
+								from somministrazione
+								inner join paziente on paziente.id = somministrazione.paziente_id
+								inner join farmaco on farmaco.id = somministrazione.farmaco_id
+								where paziente.disabilitato = 0
+								and paziente.id = ${pazienteId}
+								and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=0
+								order by somministrazione.data_inserimento desc""")
 		}
 	}
 	

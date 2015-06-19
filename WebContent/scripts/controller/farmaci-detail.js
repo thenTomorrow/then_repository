@@ -22,7 +22,7 @@ nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', 
     					
     					$http.get('reports/scadenze/byfarmaco/'+$routeParams.farmacoId)
     					.success(function(data2) {
-    						$scope.tableParams = createNgTableParams(data2, ngTableParams, $filter);
+    						$scope.tableParams = createNgTableParams(data2, ngTableParams, $filter, {giorni_rimanenti: 'asc'});
     					})
     					.error(function(){ });
     				}

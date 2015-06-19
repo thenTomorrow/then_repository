@@ -11,7 +11,7 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
 			
 			$http.get('reports/scadenze/')
 			.success(function(data) {
-			    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter);
+			    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter, {giorni_rimanenti: 'asc'});
 			    $rootScope.loadingRoot = false;
 			})
 			.error(function(){ });

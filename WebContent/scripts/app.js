@@ -88,9 +88,10 @@ var ModalCarouselCtrl = function ($scope, $modalInstance, file) {
 	
 var AccordionCtrl = function($scope) {};
 
-var createNgTableParams = function(data, ngTableParams, $filter) {
+var createNgTableParams = function(data, ngTableParams, $filter, sortingObject) {
+	
 	return new ngTableParams(
-			{page: 1, count: 100}, 
+			{page: 1, count: 100, sorting: sortingObject}, 
 			{total: data.length,
 			 getData: function($defer, params){
 				   		 	var orderedData = params.sorting() ?

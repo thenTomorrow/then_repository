@@ -7,7 +7,7 @@ nursingHomeApp.controller('esami-list', ['$scope', '$http', '$location', '$filte
 	
     $http.get('esami/')
 	.success(function(data) {
-	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter);
+	    $scope.tableParams = createNgTableParams(data, ngTableParams, $filter, {data: 'desc'});
 	    $rootScope.loadingRoot = false;
 	})
 	.error(function(){ });

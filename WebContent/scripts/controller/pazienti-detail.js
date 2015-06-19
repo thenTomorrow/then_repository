@@ -23,7 +23,7 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
     					
     					$http.get('reports/scadenze/'+$routeParams.pazienteId)
     					.success(function(data2) {
-    						$scope.tableParams = createNgTableParams(data2, ngTableParams, $filter);
+    						$scope.tableParams = createNgTableParams(data2, ngTableParams, $filter, {giorni_rimanenti: 'asc'});
     					})
     					.error(function(){ });
     				}
@@ -31,7 +31,7 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
     			
     		    $http.get('somministrazioni/bypaziente/'+$routeParams.pazienteId)
     			.success(function(data) {
-    			    $scope.tableParams1 = createNgTableParams(data, ngTableParams, $filter);
+    			    $scope.tableParams1 = createNgTableParams(data, ngTableParams, $filter, {data_inserimento: 'desc'});
     			})
     			.error(function(){ });
     			
