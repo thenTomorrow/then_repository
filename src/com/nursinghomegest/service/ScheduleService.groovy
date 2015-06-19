@@ -88,8 +88,8 @@ class ScheduleService {
 								  t.farmaco,
 								  t.paziente_id,
 							      t.paziente,
-								  sum(t.giorni_durata-t.giorni_passati) as giorni,
-							      sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)) as giorni_rimanenti
+								  cast(sum(t.giorni_durata-t.giorni_passati) as signed integer) as giorni,
+							      cast(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)) as signed integer) as giorni_rimanenti
 							from
 							(
 							select farmaco.id as farmaco_id, 
