@@ -157,4 +157,35 @@ class ReportsController {
 		
 		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getScadenzeByFarmaco(request, farmacoId)), "scadenze."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
+										
+	@RequestMapping(value="/reports/statistiche", method = RequestMethod.GET)
+	public @ResponseBody Object getStatistiche(HttpServletRequest request) {
+		
+		sqlService.withSql { sql ->
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.rows("""
+							select paziente.id as paziente_id,
+							       concat(paziente.nome,' ',paziente.cognome) as paziente,  
+								   TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE()) as eta
+							from `paziente`
+							where paziente.`cliente_id` = ${cliente_id}
+							and paziente.disabilitato = 0
+							order by paziente.`data_nascita`
+							""")
+		}
+	}
+	
+	@RequestMapping(value="/reports/statistiche/etamedia", method = RequestMethod.GET)
+	public @ResponseBody Object getStatisticheEtaMedia(HttpServletRequest request) {
+		
+		sqlService.withSql { sql ->
+			Integer cliente_id = request.getSession().getAttribute("cliente_id")
+			return sql.firstRow("""
+								select avg(TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE())) as eta_media
+								from `paziente`
+								where paziente.`cliente_id` = 1
+								and paziente.disabilitato = 0
+								""")
+		}
+	}
 }
