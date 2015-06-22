@@ -46,7 +46,7 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
 	
 	$http.get('reports/statistiche/etamedia')
 	.success(function(data) {
-		$scope.etamedia = data;
+		$scope.eta = data;
 	})
 	.error(function(){ });
     
