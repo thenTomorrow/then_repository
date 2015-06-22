@@ -181,7 +181,7 @@ class ReportsController {
 		sqlService.withSql { sql ->
 			Integer cliente_id = request.getSession().getAttribute("cliente_id")
 			return sql.firstRow("""
-								select avg(TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE())) as eta_media,
+								select round(avg(TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE())),0) as eta_media,
 									   min(TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE())) as eta_minima,
 									   max(TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE())) as eta_massima
 								from `paziente`
