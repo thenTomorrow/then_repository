@@ -72,7 +72,7 @@ class SomministrazioniController {
 								   from somministrazione
 								   inner join paziente on paziente.id = somministrazione.paziente_id
 								   inner join farmaco on farmaco.id = somministrazione.farmaco_id
-								   where id = ${id} and paziente.cliente_id=${cliente_id} and farmaco.cliente_id=${cliente_id}""")
+								   where somministrazione.id = ${id} and paziente.cliente_id=${cliente_id} and farmaco.cliente_id=${cliente_id}""")
 		}
 	}
 	
