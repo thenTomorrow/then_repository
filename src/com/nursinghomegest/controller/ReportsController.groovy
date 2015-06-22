@@ -170,6 +170,7 @@ class ReportsController {
 							from `paziente`
 							where paziente.`cliente_id` = ${cliente_id}
 							and paziente.disabilitato = 0
+							and paziente.data_nascita is not null
 							order by paziente.`data_nascita`
 							""")
 		}
@@ -185,8 +186,9 @@ class ReportsController {
 									   min(TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE())) as eta_minima,
 									   max(TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE())) as eta_massima
 								from `paziente`
-								where paziente.`cliente_id` = 1
+								where paziente.`cliente_id` = ${cliente_id}
 								and paziente.disabilitato = 0
+								and paziente.data_nascita is not null
 								""")
 		}
 	}

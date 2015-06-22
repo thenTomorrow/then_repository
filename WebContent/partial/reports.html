@@ -70,30 +70,36 @@
 	
 	<script type="text/ng-template" id="statistiche.tpl.html">
 		<br/>
-		<div class="form-group">
-			<div class="col-md-3">
-				<h3><span class="label label-warning"><i class="glyphicon glyphicon-transfer"></i> Et&agrave; media: {{eta.eta_media}} anni</span></h3>
+		<div ng-show="eta.eta_media!=null">
+			<div class="form-group">
+				<div class="col-md-3">
+					<h3><span class="label label-warning"><i class="glyphicon glyphicon-transfer"></i> Et&agrave; media: {{eta.eta_media}} anni</span></h3>
+				</div>
+				<div class="col-md-3">
+					<h3><span class="label label-success"><i class="glyphicon glyphicon-circle-arrow-down"></i> Et&agrave; minima: {{eta.eta_minima}} anni</span></h3>
+				</div>
+				<div class="col-md-3">
+					<h3><span class="label label-danger"><i class="glyphicon glyphicon-circle-arrow-up"></i> Et&agrave; massima: {{eta.eta_massima}} anni</span></h3>	
+				</div>
 			</div>
-			<div class="col-md-3">
-				<h3><span class="label label-success"><i class="glyphicon glyphicon-circle-arrow-down"></i> Et&agrave; minima: {{eta.eta_minima}} anni</span></h3>
-			</div>
-			<div class="col-md-3">
-				<h3><span class="label label-danger"><i class="glyphicon glyphicon-circle-arrow-up"></i> Et&agrave; massima: {{eta.eta_massima}} anni</span></h3>	
-			</div>
+			<br/><br/><br/>
+   			<div class="table-responsive">
+	 	  		<table class="table table-hover table-striped table-bordered" ng-table="tableParams1">
+		    		<tr ng-repeat="statistica in $data | filter:query">
+			      		<td data-title="'Paziente'" sortable="'paziente'">
+			      			<a ng-href="#pazienti/{{statistica.paziente_id}}">{{statistica.paziente}}</a>
+			      		</td>
+			      		<td data-title="'Et&agrave;'" sortable="'eta'">
+			      			{{statistica.eta}}
+			      		</td>
+		    		</tr>
+	      		</table>
+      		</div>
 		</div>
-		<br/><br/><br/>
-   		<div class="table-responsive">
-	 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams1">
-		    	<tr ng-repeat="statistica in $data | filter:query">
-			      	<td data-title="'Paziente'" sortable="'paziente'">
-			      		<a ng-href="#pazienti/{{statistica.paziente_id}}">{{statistica.paziente}}</a>
-			      	</td>
-			      	<td data-title="'Et&agrave;'" sortable="'eta'">
-			      		{{statistica.eta}}
-			      	</td>
-		    	</tr>
-	      	</table>
-      	</div>
+		<div ng-show="eta.eta_media==null">
+			<alert type="info"><i class="glyphicon glyphicon-info-sign"></i> Statistiche non disponibili</alert>
+		</div>
+
 	</script>
     
 </div>
