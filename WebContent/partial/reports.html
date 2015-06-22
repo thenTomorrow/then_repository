@@ -1,43 +1,61 @@
 <div style="padding: 2px;">
 
-	<div class="panel panel-primary" style="padding: 2px;">
-		<div class="panel-heading">
-			<i class="glyphicon glyphicon-th-list"></i> Scadenze
-		</div>
-	 	<div class="panel-body">
-	 		<div class="table-responsive">
-		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
-			    	<tr ng-repeat="scadenza in $data | filter:query">
-				      	<td data-title="'Farmaco'" sortable="'farmaco'">
-				      		<a ng-href="#farmaci/{{scadenza.farmaco_id}}">{{scadenza.farmaco}}</a>
-				      	</td>
-				      	<td data-title="'Paziente'" sortable="'paziente'">
-				      		<a ng-href="#pazienti/{{scadenza.paziente_id}}">{{scadenza.paziente}}</a>
-				      	</td>
-				      	<td data-title="'Giorni rimantenti'" sortable="'giorni_rimanenti'">
-				      		<span ng-show="scadenza.giorni_rimanenti>0">
-				      			{{scadenza.giorni_rimanenti}} giorni rimanenti
-				      		</span>
-				      		<span ng-show="scadenza.giorni_rimanenti<=0">
-				      			nessun giorno rimanente
-				      		</span>
-				      	</td>
-				      	<td data-title="'Stato'">
-				      		<span ng-show="scadenza.giorni_rimanenti>numeroGiorni" class="label label-primary">
-				      			OK
-				      		</span>
-				      		<span ng-show="scadenza.giorni_rimanenti>0 && scadenza.giorni_rimanenti<=numeroGiorni" class="label label-warning">
-				      			IN SCADENZA
-				      		</span>
-				      		<span ng-show="scadenza.giorni_rimanenti<=0" class="label label-danger">
-				      			SCADUTE
-				      		</span>
-				      	</td>
-			    	</tr>
-		      	</table>
-	      	</div>
+<div class="panel panel-primary" style="padding: 2px;">
+	<div class="panel-heading">
+		<i class="glyphicon glyphicon-th-list"></i> Reports 
+	</div>		
+	<div class="panel-body">
+		<ul class="nav nav-tabs" role="tablist">
+	    	<li role="presentation"
+	    		ng-repeat="tab in tabs" 
+	            ng-class="{active:isActiveTab(tab.url)}" 
+	            ng-click="onClickTab(tab)">
+	            <a role="tab" data-toggle="tab">
+	            	<i class="{{tab.icon}}"></i> {{tab.title}}
+	            </a>
+	        </li>
+	    </ul>
+		<div class="tab-content">
+	    	<div role="tabpanel">
+	    		<div ng-include="currentTab"></div>
+	    	</div>
 	    </div>
-	    <div class="panel-footer" align="center">
+    </div>
+   
+    <script type="text/ng-template" id="scadenze.tpl.html">
+		<br/>
+   		<div class="table-responsive">
+	 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
+		    	<tr ng-repeat="scadenza in $data | filter:query">
+			      	<td data-title="'Farmaco'" sortable="'farmaco'">
+			      		<a ng-href="#farmaci/{{scadenza.farmaco_id}}">{{scadenza.farmaco}}</a>
+			      	</td>
+			      	<td data-title="'Paziente'" sortable="'paziente'">
+			      		<a ng-href="#pazienti/{{scadenza.paziente_id}}">{{scadenza.paziente}}</a>
+			      	</td>
+			      	<td data-title="'Giorni rimantenti'" sortable="'giorni_rimanenti'">
+			      		<span ng-show="scadenza.giorni_rimanenti>0">
+			      			{{scadenza.giorni_rimanenti}} giorni rimanenti
+			      		</span>
+			      		<span ng-show="scadenza.giorni_rimanenti<=0">
+			      			nessun giorno rimanente
+			      		</span>
+			      	</td>
+			      	<td data-title="'Stato'">
+			      		<span ng-show="scadenza.giorni_rimanenti>numeroGiorni" class="label label-primary">
+			      			OK
+			      		</span>
+			      		<span ng-show="scadenza.giorni_rimanenti>0 && scadenza.giorni_rimanenti<=numeroGiorni" class="label label-warning">
+			      			IN SCADENZA
+			      		</span>
+			      		<span ng-show="scadenza.giorni_rimanenti<=0" class="label label-danger">
+			      			SCADUTE
+			      		</span>
+			      	</td>
+		    	</tr>
+	      	</table>
+      	</div>
+      	<div class="panel-footer" align="center">
 	    	<a class="btn btn-warning" ng-href="reports/scadenze.csv" >
 	    		<i class="glyphicon glyphicon-export"></i> CSV
 	    	</a>
@@ -48,5 +66,23 @@
 	    		<i class="glyphicon glyphicon-export"></i> PDF
 	    	</a>
 	    </div>
-	</div>
+	</script>
+	
+	<script type="text/ng-template" id="statistiche.tpl.html">
+		<br/>
+   		<div class="table-responsive">
+	 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams1">
+		    	<tr ng-repeat="statistica in $data | filter:query">
+			      	<td data-title="'Paziente'" sortable="'paziente'">
+			      		<a ng-href="#pazienti/{{statistica.paziente_id}}">{{statistica.paziente}}</a>
+			      	</td>
+			      	<td data-title="'Et&agrave;'" sortable="'eta'">
+			      		{{statistica.eta}}
+			      	</td>
+		    	</tr>
+	      	</table>
+      	</div>
+	</script>
+    
+</div>
 </div>
