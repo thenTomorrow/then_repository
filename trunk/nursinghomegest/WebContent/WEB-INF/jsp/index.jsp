@@ -74,10 +74,12 @@
 			$scope.$location = $location;
 			$scope.intestazione = '';
 			$scope.indirizzo = '';
+			$scope.nome = '';
 			$http.get('cliente')
 			.success(function(data) {
 			    $scope.intestazione = data.denominazione;
 			    $scope.indirizzo = data.indirizzo;
+			    $scope.nome = data.nome;
 			})
 			.error(function(){ });
 			
