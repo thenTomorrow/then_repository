@@ -56,21 +56,21 @@
 		            	<li ng-class="{active:($location.path().indexOf('/esami')!=-1)}"><a href="#esami"><i class="glyphicon glyphicon-check"></i> <span class="menu-item">Esami</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/reports')!=-1)}"><a href="#reports"><i class="glyphicon glyphicon-th-list"></i> <span class="menu-item">Reports</span></a></li>
 		            	<li ng-class="{active:($location.path().indexOf('/impostazioni')!=-1)}"><a href="#impostazioni"><i class="glyphicon glyphicon-cog"></i> <span class="menu-item">Impostazioni</span></a></li>
-		            	<li><a href="logout"><i class="glyphicon glyphicon-off"></i> <span class="menu-item">Esci</span></a></li>
 	          		</ul>
-			        <form class="navbar-form navbar-left" role="search" ng-submit="navCollapsed=true;search(query);query=''">
-				    	<div class="input-group">
+			        <form class="navbar-form navbar-right" role="search" style="float: left;" ng-submit="navCollapsed=true;search(query);query=''">
+				    	<div class="input-group" style="width:78%;float:left;margin-right:5px;">
 				  			<input type="text" class="form-control" placeholder="Cerca" ng-model="query">
 				  			<div class="input-group-btn">
 				  				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
 				  			</div>
 				    	</div>
+				    	<button type="button" ng-click="openLogout()" class="btn btn-danger" style="float:left;"><i class="glyphicon glyphicon-off"></i></button>
 				    </form>
 		        </div>
       		</div>
     	</div>
-    	<script>		
-		function HeaderController($scope, $location, $http) {
+    	<script>
+    	function HeaderController($scope, $location, $http, $modal) {
 			$scope.$location = $location;
 			$scope.intestazione = '';
 			$scope.indirizzo = '';
@@ -83,14 +83,41 @@
 			})
 			.error(function(){ });
 			
+			$scope.openLogout = function () {
+		    	var modalInstance = $modal.open({
+		    		templateUrl: 'myModalLogout.html',
+		    		controller: 'ModalInstanceCtrl',
+		    		resolve: {
+		    			body: function () {
+		    				return 'Sicuro di voler uscire dall\'applicativo?';
+		  	          	}
+		  		  	}
+		        });
+		    };
 		}
 		</script>
+		
 	    <center>
 			<div class="progress" ng-show="$parent.loadingRoot" style="width: 50%">
 				<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
 			</div>
 		</center>
 		<div style="padding: 2px;" ng-view ng-show="!$parent.loadingRoot"></div>
+		
+		<script type="text/ng-template" id="myModalLogout.html">
+        	<div class="modal-header">
+	        	<button type="button" class="close" aria-label="Close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
+	        	<h4 class="modal-title"><i class="glyphicon glyphicon-off"></i> Logout</h4>
+	      	</div>
+	      	<div class="modal-body">
+	      		<h4>{{body}}</h4>
+			</div>
+	      	<div class="modal-footer">
+	      		<a href="logout" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> Si</a>
+		        <button type="button" class="btn btn-default" ng-click="cancel()">No</button>
+			</div>
+    	</script>
+		
 		<div class="footer">
 	    	<div class="container" style="text-align: center;">
 	        	<p class="text-muted">{{intestazione}}</p>
