@@ -10,7 +10,7 @@
 			<form class="form-horizontal" role="form" name="impostazioniForm" novalidate>
 				<div class="row">
 			      	<div class="form-group">
-					   	<label for="emailScadenze" class="col-md-3 control-label">Email messaggi di scadenza farmaci</label>
+					   	<label for="emailScadenze" class="col-md-3 control-label">Emails messaggi di scadenza farmaci</label>
 					   	<div class="col-md-4">
 					    	<input type="text" name="emailScadenze" id="emailScadenze" ng-model="emailScadenze" class="form-control" required/>
 					    </div>
@@ -26,7 +26,7 @@
 			    	<div class="col-md-8" style="text-align: center;">
 			     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="impostazioniForm.emailScadenze.$invalid || impostazioniForm.numeroGiorni.$invalid">
 			     			<i class="glyphicon glyphicon-floppy-disk"></i>
-			     			Modifica
+			     			Salva
 			     		</button>
 			     	</div>	
 			    </div>

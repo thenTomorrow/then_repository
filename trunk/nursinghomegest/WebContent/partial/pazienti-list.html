@@ -46,9 +46,10 @@
 				      	<td data-title="'Cognome'" sortable="'cognome'">
 				      		<a ng-href="#pazienti/{{paziente.id}}">{{paziente.cognome}}</a>
 				      	</td>
-				      	<td data-title="'Data di nascita'" sortable="'data_nascita'">{{paziente.data_nascita}} <span ng-show="paziente.comune_nascita!=null">a {{paziente.comune_nascita}}</span></td>
+				      	<td data-title="'Data di nascita'" sortable="'data_nascita'" class="text-center">{{paziente.data_nascita}}</td> 
+				      	<td data-title="'Comune di nascita'" sortable="'comune_nascita'">{{paziente.comune_nascita}}</td>
 				      	<td data-title="'Medico curante'" sortable="'medico_curante'">{{paziente.medico_curante}}</td>
-				      	<td data-title="'Stato'" sortable="'stato'">
+				      	<td data-title="'Stato'" sortable="'stato'" class="text-center">
 				      		<span ng-show="!paziente.disabilitato" class="label label-success">
 				      			{{paziente.stato}}
 				      		</span>
