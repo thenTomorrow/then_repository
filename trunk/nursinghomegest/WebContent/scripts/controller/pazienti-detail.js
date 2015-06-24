@@ -113,4 +113,25 @@ nursingHomeApp.controller('pazienti-detail', ['$scope', '$routeParams', '$http',
         }
     	$window.scrollTo(0,0);
     };
+    
+    $scope.cancella = function (id) {
+    	
+    	var modalInstance = $modal.open({
+    		templateUrl: 'myModalContent.html',
+    		controller: 'ModalInstanceCtrl',
+    		resolve: {
+    			body: function () {
+    				return 'Vuoi veramente cancellare la somministrazione?';
+  	          	}
+  		  	}
+        });
+
+    	modalInstance.result.then(function (selectedItem) {
+    		$http['delete']('somministrazioni/'+id).success(function(data){
+    			$window.location.reload();
+	     	});
+	    }, function () {
+	    	
+	    });
+    };
 }]);
