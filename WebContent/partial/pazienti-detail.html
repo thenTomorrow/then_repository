@@ -159,6 +159,9 @@
 								      		<a ng-href="#farmaci/{{somministrazione.farmaco_id}}">{{somministrazione.farmaco}}</a>
 								      	</td>
 								      	<td data-title="'Quantit&agrave; giornaliera'" sortable="'quantita'" class="text-right">{{somministrazione.quantita}}</td>
+								      	<td data-title="''" class="text-center">
+								      		<button type="button" class="btn btn-danger" ng-click="cancella(somministrazione.id)"><i class="glyphicon glyphicon-trash"></i> Cancella</button>
+								      	</td>
 								    </tr>
 						      	</table>
 					      	</div>
