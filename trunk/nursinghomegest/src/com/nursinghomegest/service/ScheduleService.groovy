@@ -84,11 +84,64 @@ class ScheduleService {
 							.from("then.poidomani@gmail.com")
 							.message()
 							)
-					logger.info("Inviata richiesta cliente "+cliente.id)
+					logger.info("Inviata mail scadenze farmaci cliente "+cliente.id)
 					
 				}catch(Exception e) {
-					logger.error("Errore invio richiesta cliente "+cliente.id)
+					logger.error("Errore invio mail scadenze farmaci cliente "+cliente.id)
 				}
+			}
+		}
+	}
+	
+	@Scheduled(cron="0 45 8 * * ?")
+	public void compleanni() {
+		
+		def clienti = []
+		sqlService.withSql { sql ->
+			clienti = sql.rows("select * from cliente")
+		}
+		
+		clienti.each { cliente ->
+			String mailToList = impostazioniService.getImpostazione("email_scadenze", cliente.id)
+			String[] mailTo = mailToList!=null?mailToList.split(","):null	
+					
+			def list = []
+			if(mailTo!=null) {
+				sqlService.withSql { sql ->
+					list = sql.rows(getCompleanniQuery(cliente.id, "1"))
+				}
+			}
+			
+			if(list) {
+				list.each { element ->
+					String subject = "Notifica Compleanno - "+cliente.denominazione;
+					String messaggio = """<html> 
+										  <head> 
+										  <title>Notifica Compleanno</title>
+										  </head> 
+										  <body>
+										  <h4>Domani il paziente <span style='color:blue'>${element.paziente}</span> spegne le sue <span style='color:blue'>${element.eta}</span> candeline!</h4>
+										  <h3 style='color:green'>AUGURI!!!!</h3>
+										  <i>PS: Ricordati di conservare una fetta di torta per il programmatore :-P</i>
+								 		  </body>
+										  </html>"""
+							
+							// Invio l'email
+							try {
+								mailService.send(
+										new MailBuilder()
+										.subject(subject)
+										.html(messaggio)
+										.addTo(mailTo)
+										.from("then.poidomani@gmail.com")
+										.message()
+										)
+								logger.info("Inviata mail compleanno cliente "+cliente.id)
+								
+							}catch(Exception e) {
+								logger.error("Errore invio mail compleanno cliente "+cliente.id)
+							}
+					}
 			}
 		}
 	}
@@ -132,6 +185,34 @@ class ScheduleService {
 		
 		query+="""order by giorni_rimanenti """
 		
+		return query
+	}
+	
+	public String getCompleanniQuery(Integer cliente_id, String giorniPreavviso) {
+		
+		String query = """select paziente.id as paziente_id,
+							       concat(paziente.nome,' ',paziente.cognome) as paziente,  
+								   paziente.data_nascita,
+							       DATE_FORMAT(paziente.data_nascita,'%d/%m/%Y') data_nascita_string,
+							       if(DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())<0,
+							          DATEDIFF(CONCAT(YEAR(CURDATE())+1,'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE()),
+							          DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())
+							         )as num_giorni_compleanno,
+								   if(DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())<0,
+							          CONCAT(LPAD(DAY(paziente.`data_nascita`),2,'00'),'/',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'/',YEAR(CURDATE())+1),
+							          CONCAT(LPAD(DAY(paziente.`data_nascita`),2,'00'),'/',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'/',YEAR(CURDATE()))
+							         )as giorno_compleanno,
+								   TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE()) as eta
+							from `paziente`
+							where paziente.`cliente_id` = ${cliente_id}
+							and paziente.disabilitato = 0
+							and paziente.data_nascita is not null
+						"""
+		
+		if(giorniPreavviso!=null)
+			query+="""having num_giorni_compleanno<=${giorniPreavviso} """
+		query+="""order by paziente.`data_nascita`"""				
+						
 		return query
 	}
 }
