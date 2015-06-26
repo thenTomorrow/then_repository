@@ -171,7 +171,11 @@ class ReportsController {
 							       if(DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())<0,
 							          DATEDIFF(CONCAT(YEAR(CURDATE())+1,'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE()),
 							          DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())
-							         )as giorni_compleanno,
+							         )as num_giorni_compleanno,
+								   if(DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())<0,
+							          CONCAT(LPAD(DAY(paziente.`data_nascita`),2,'00'),'/',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'/',YEAR(CURDATE())+1),
+							          CONCAT(LPAD(DAY(paziente.`data_nascita`),2,'00'),'/',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'/',YEAR(CURDATE()))
+							         )as giorno_compleanno,
 								   TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE()) as eta
 							from `paziente`
 							where paziente.`cliente_id` = ${cliente_id}
