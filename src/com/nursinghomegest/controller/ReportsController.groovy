@@ -166,6 +166,12 @@ class ReportsController {
 			return sql.rows("""
 							select paziente.id as paziente_id,
 							       concat(paziente.nome,' ',paziente.cognome) as paziente,  
+								   paziente.data_nascita,
+							       DATE_FORMAT(paziente.data_nascita,'%d/%m/%Y') data_nascita_string,
+							       if(DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())<0,
+							          DATEDIFF(CONCAT(YEAR(CURDATE())+1,'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE()),
+							          DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())
+							         )as giorni_compleanno,
 								   TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE()) as eta
 							from `paziente`
 							where paziente.`cliente_id` = ${cliente_id}

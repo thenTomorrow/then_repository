@@ -89,8 +89,14 @@
 			      		<td data-title="'Paziente'" sortable="'paziente'">
 			      			<a ng-href="#pazienti/{{statistica.paziente_id}}">{{statistica.paziente}}</a>
 			      		</td>
+						<td data-title="'Data di Nascita'" sortable="'data_nascita'" class="text-center">
+			      			{{statistica.data_nascita_string}}
+			      		</td>
 			      		<td data-title="'Et&agrave;'" sortable="'eta'" class="text-right">
-			      			{{statistica.eta}}
+			      			{{statistica.eta}} anni
+			      		</td>
+						<td data-title="'Prossimo Compleanno tra'" sortable="'giorni_compleanno'" class="text-right">
+			      			{{statistica.giorni_compleanno}} giorni
 			      		</td>
 		    		</tr>
 	      		</table>
