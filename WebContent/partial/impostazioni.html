@@ -10,15 +10,15 @@
 			<form class="form-horizontal" role="form" name="impostazioniForm" novalidate>
 				<div class="row">
 			      	<div class="form-group">
-					   	<label for="emailScadenze" class="col-md-3 control-label">Emails messaggi di scadenza farmaci</label>
-					   	<div class="col-md-4">
+					   	<label for="emailScadenze" class="col-md-3 control-label">Emails notifiche:</label>
+					   	<div class="col-md-7">
 					    	<input type="text" name="emailScadenze" id="emailScadenze" ng-model="emailScadenze" class="form-control" required/>
 					    </div>
 				    </div>
 			      	<div class="form-group">
-					   	<label for="numeroGiorni" class="col-md-3 control-label">Numero di giorni di avviso</label>
-					   	<div class="col-md-4">
-					    	<input type="number" name="numeroGiorni" id="numeroGiorni" ng-model="numeroGiorni" class="form-control" required/>
+					   	<label for="numeroGiorni" class="col-md-3 control-label">Numero di giorni di preavviso:</label>
+					   	<div class="col-md-1">
+					    	<input type="number" name="numeroGiorni" id="numeroGiorni" ng-model="numeroGiorni" class="form-control" max="99" required/>
 					    </div>
 				    </div>
 				</div>

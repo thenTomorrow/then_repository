@@ -163,26 +163,7 @@ class ReportsController {
 		
 		sqlService.withSql { sql ->
 			Integer cliente_id = request.getSession().getAttribute("cliente_id")
-			return sql.rows("""
-							select paziente.id as paziente_id,
-							       concat(paziente.nome,' ',paziente.cognome) as paziente,  
-								   paziente.data_nascita,
-							       DATE_FORMAT(paziente.data_nascita,'%d/%m/%Y') data_nascita_string,
-							       if(DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())<0,
-							          DATEDIFF(CONCAT(YEAR(CURDATE())+1,'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE()),
-							          DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())
-							         )as num_giorni_compleanno,
-								   if(DATEDIFF(CONCAT(YEAR(CURDATE()),'-',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'-',LPAD(DAY(paziente.`data_nascita`),2,'00')), CURDATE())<0,
-							          CONCAT(LPAD(DAY(paziente.`data_nascita`),2,'00'),'/',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'/',YEAR(CURDATE())+1),
-							          CONCAT(LPAD(DAY(paziente.`data_nascita`),2,'00'),'/',LPAD(MONTH(paziente.`data_nascita`),2,'00'),'/',YEAR(CURDATE()))
-							         )as giorno_compleanno,
-								   TIMESTAMPDIFF(YEAR, paziente.`data_nascita`, CURDATE()) as eta
-							from `paziente`
-							where paziente.`cliente_id` = ${cliente_id}
-							and paziente.disabilitato = 0
-							and paziente.data_nascita is not null
-							order by paziente.`data_nascita`
-							""")
+			return sql.rows(scheduleService.getCompleanniQuery(cliente_id, null))
 		}
 	}
 	
