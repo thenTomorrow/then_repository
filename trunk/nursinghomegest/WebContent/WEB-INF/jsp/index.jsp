@@ -6,6 +6,9 @@
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="icon" type="image/png" href="img/{{nome}}.png" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="pragma" content="no-cache" />
 		
 		<script src="js/jquery-2.1.4.min.js" ></script>
 		<script src="js/angular.min.js" ></script>
