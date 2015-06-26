@@ -120,7 +120,7 @@ class ScheduleService {
 										  <title>Notifica Compleanno</title>
 										  </head> 
 										  <body>
-										  <h4>Domani il paziente <span style='color:blue'>${element.paziente}</span> spegne le sue <span style='color:blue'>${element.eta}</span> candeline!</h4>
+										  <h4>Domani il paziente <span style='color:blue'>${element.paziente}</span> spegner&agrave; le sue <span style='color:blue'>${element.eta+1}</span> candeline!</h4>
 										  <h3 style='color:green'>AUGURI!!!!</h3>
 										  <i>PS: Ricordati di conservare una fetta di torta per il programmatore :-P</i>
 								 		  </body>
