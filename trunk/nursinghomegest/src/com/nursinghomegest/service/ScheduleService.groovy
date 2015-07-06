@@ -108,7 +108,7 @@ class ScheduleService {
 			def list = []
 			if(mailTo!=null) {
 				sqlService.withSql { sql ->
-					list = sql.rows(getCompleanniQuery(cliente.id, "1"))
+					list = sql.rows(getCompleanniQuery(cliente.id, "2"))
 				}
 			}
 			
@@ -120,7 +120,7 @@ class ScheduleService {
 										  <title>Notifica Compleanno</title>
 										  </head> 
 										  <body>
-										  <h4>Domani il paziente <span style='color:blue'>${element.paziente}</span> spegner&agrave; le sue <span style='color:blue'>${element.eta+1}</span> candeline!</h4>
+										  <h4>Tra 2 giorni il paziente <span style='color:blue'>${element.paziente}</span> spegner&agrave; le sue <span style='color:blue'>${element.eta+1}</span> candeline!</h4>
 										  <h3 style='color:green'>AUGURI!!!!</h3>
 										  <i>PS: Ricordati di conservare una fetta di torta per il programmatore :-P</i>
 								 		  </body>
@@ -176,7 +176,7 @@ class ScheduleService {
 			query+="""where paziente.id = ${pazienteId} and farmaco.id = ${farmacoId} """		
 		
 		query+="""and paziente.cliente_id = ${cliente_id} and farmaco.cliente_id = ${cliente_id}
-				  and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=-4
+				  and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=-3
 				  ) t
 				  group by t.farmaco_id, t.paziente_id """
 		
