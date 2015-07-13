@@ -210,7 +210,7 @@ class ScheduleService {
 						"""
 		
 		if(giorniPreavviso!=null)
-			query+="""having num_giorni_compleanno<=${giorniPreavviso} """
+			query+="""having num_giorni_compleanno=${giorniPreavviso} """
 		query+="""order by paziente.`data_nascita`"""				
 						
 		return query
