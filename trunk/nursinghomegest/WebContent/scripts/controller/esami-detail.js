@@ -3,6 +3,7 @@ var nursingHomeApp =  angular.module('nursingHomeApp');
 nursingHomeApp.controller('esami-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window',
   function($scope, $routeParams, $http, $modal, $location, $window) {
 	
+	$rootScope.loadingRoot = true;
 	$scope.isOpenInfo = true;
 	$scope.isFileDaCaricare = true;
 	$scope.isDocumentoDaCaricare = true;
@@ -30,11 +31,14 @@ nursingHomeApp.controller('esami-detail', ['$scope', '$routeParams', '$http', '$
     			$scope.esame = data;
     			$scope.imgPreview = data;
     			$scope.random = (new Date()).toString();
-    		}else{
+    		}else
     			$scope.esameId = "Nuovo";
-    		}
+    		
+    		$rootScope.loadingRoot = false;
     	});
     }
+    else
+    	$rootScope.loadingRoot = false;
    
     $scope.open = function () {
     	var esameId = $scope.esame.id;
