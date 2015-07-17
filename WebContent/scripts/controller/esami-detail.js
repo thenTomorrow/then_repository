@@ -1,7 +1,7 @@
 var nursingHomeApp =  angular.module('nursingHomeApp');
 
-nursingHomeApp.controller('esami-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window',
-  function($scope, $routeParams, $http, $modal, $location, $window) {
+nursingHomeApp.controller('esami-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window', '$rootScope',
+  function($scope, $routeParams, $http, $modal, $location, $window, $rootScope) {
 	
 	$rootScope.loadingRoot = true;
 	$scope.isOpenInfo = true;
