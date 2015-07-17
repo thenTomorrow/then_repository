@@ -8,7 +8,7 @@
 			<alert ng-show="alertOK!=''" type="success" close="alertOK=''" >{{alertOK}}</alert>		
 			<alert ng-show="alertKO!=''" type="danger" close="alertKO=''" >{{alertKO}}</alert>		
 			<form class="form-horizontal" role="form" name="impostazioniForm" novalidate>
-				<div class="row">
+				
 			      	<div class="form-group">
 					   	<label for="emailScadenze" class="col-md-3 control-label">Emails notifiche:</label>
 					   	<div class="col-md-7">
@@ -21,15 +21,14 @@
 					    	<input type="number" name="numeroGiorni" id="numeroGiorni" ng-model="numeroGiorni" class="form-control" max="99" required/>
 					    </div>
 				    </div>
-				</div>
-			    <div class="row">
+				
 			    	<div class="col-md-8" style="text-align: center;">
 			     		<button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="impostazioniForm.emailScadenze.$invalid || impostazioniForm.numeroGiorni.$invalid">
 			     			<i class="glyphicon glyphicon-floppy-disk"></i>
 			     			Salva
 			     		</button>
 			     	</div>	
-			    </div>
+			    
 			</form>	
 		</div>
 	</div>
