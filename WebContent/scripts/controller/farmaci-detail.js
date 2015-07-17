@@ -7,6 +7,7 @@ nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', 
 	$scope.alertOK = '';
 	$scope.isOpenDatiFarmaco = true;
 	$scope.isOpenScadenze = true;
+	$scope.isOpenSomministrazioni = true;
 	$scope.alertKO = '';
 	$scope.farmaco = {quantita_per_pezzo:12};
 	
@@ -27,6 +28,13 @@ nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', 
     					.error(function(){ });
     				}
     			});
+    			
+    			$http.get('somministrazioni/byfarmaco/'+$routeParams.farmacoId)
+    			.success(function(data) {
+    			    $scope.tableParams1 = createNgTableParams(data, ngTableParams, $filter, {data_inserimento: 'desc'});
+    			})
+    			.error(function(){ });
+    			
     		}else
     			$scope.farmacoId = "Nuovo";
     		
@@ -83,5 +91,26 @@ nursingHomeApp.controller('farmaci-detail', ['$scope', '$routeParams', '$http', 
         	});
         }
     	$window.scrollTo(0,0);
+    };
+    
+    $scope.cancella = function (id) {
+    	
+    	var modalInstance = $modal.open({
+    		templateUrl: 'myModalContent.html',
+    		controller: 'ModalInstanceCtrl',
+    		resolve: {
+    			body: function () {
+    				return 'Vuoi veramente cancellare la somministrazione?';
+  	          	}
+  		  	}
+        });
+
+    	modalInstance.result.then(function (selectedItem) {
+    		$http['delete']('somministrazioni/'+id).success(function(data){
+    			$window.location.reload();
+	     	});
+	    }, function () {
+	    	
+	    });
     };
 }]);

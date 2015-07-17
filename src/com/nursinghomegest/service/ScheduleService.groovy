@@ -176,7 +176,7 @@ class ScheduleService {
 			query+="""where paziente.id = ${pazienteId} and farmaco.id = ${farmacoId} """		
 		
 		query+="""and paziente.cliente_id = ${cliente_id} and farmaco.cliente_id = ${cliente_id}
-				  and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=-3
+				  and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=-2
 				  ) t
 				  group by t.farmaco_id, t.paziente_id """
 		
