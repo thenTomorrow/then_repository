@@ -26,7 +26,7 @@
 	 	<div class="panel-body">
 	 		<div class="table-responsive">
 		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
-			    	<tr ng-repeat="esame in $data | filter:query | filter:selectedLanguage">
+			    	<tr ng-repeat="esame in $data | filter:query">
 				      	<td data-title="'Data'" sortable="'data'" class="text-center">{{esame.data_esame}}</td>
 				      	<td data-title="'Paziente'" sortable="'paziente'">
 				      		<a ng-href="#pazienti/{{esame.paziente_id}}">{{esame.paziente}}</a>
