@@ -38,7 +38,7 @@
 		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css" rel="stylesheet prefetch" >
 		<link href="css/nursinghome.css" rel="stylesheet">
 	</head>
-	<body ng-init="$parent.loadingRoot=false">
+	<body ng-init="$parent.loadingRoot=false" ng-cloak>
 		<a id="top-scroll" name="top"></a>
 		<div class="navbar navbar-default" role="navigation">
       		<div class="container" style="width:100%">
