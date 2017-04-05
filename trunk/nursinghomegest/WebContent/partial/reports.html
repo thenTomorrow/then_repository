@@ -68,6 +68,33 @@
 	    </div>
 	</script>
 	
+	<script type="text/ng-template" id="farmaciusati.tpl.html">
+		<br/>
+   		<div class="table-responsive">
+	 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams2">
+		    	<tr ng-repeat="f in $data | filter:query">
+			      	<td data-title="'Farmaco'" sortable="'farmaco'">
+			      		<a ng-href="#farmaci/{{f.farmaco_id}}">{{f.farmaco}}</a>
+			      	</td>
+			      	<td data-title="'Caricati'" sortable="'num_caricati'" class="text-right">
+			      		{{f.num_caricati}} volte
+			      	</td>
+		    	</tr>
+	      	</table>
+      	</div>
+      	<div class="panel-footer" align="center">
+	    	<a class="btn btn-warning" ng-href="reports/statistiche/farmaciusati.csv" >
+	    		<i class="glyphicon glyphicon-export"></i> CSV
+	    	</a>
+	    	<a class="btn btn-success" ng-href="reports/statistiche/farmaciusati.xls" >
+	    		<i class="glyphicon glyphicon-export"></i> Excel
+	    	</a>
+	    	<a class="btn btn-danger" ng-href="reports/statistiche/farmaciusati.pdf" >
+	    		<i class="glyphicon glyphicon-export"></i> PDF
+	    	</a>
+	    </div>
+	</script>
+	
 	<script type="text/ng-template" id="statistiche.tpl.html">
 		<br/>
 		<div ng-show="eta.eta_media!=null">

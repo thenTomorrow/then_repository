@@ -8,6 +8,10 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
         icon: 'glyphicon glyphicon-th-list',
         url: 'scadenze.tpl.html'
     }, {
+        title: "Farmaci piu' usati",
+        icon: 'glyphicon glyphicon-stats',
+        url: 'farmaciusati.tpl.html'
+    }, {
         title: 'Statistiche',
         icon: 'glyphicon glyphicon-stats',
         url: 'statistiche.tpl.html'
@@ -38,9 +42,15 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
 		}
 	});
 	
+	$http.get('reports/statistiche/farmaciusati')
+	.success(function(data) {
+	    $scope.tableParams2 = createNgTableParams(data, ngTableParams, $filter, {num_caricati: 'desc'});
+	})
+	.error(function(){ });
+	
 	$http.get('reports/statistiche/')
 	.success(function(data) {
-	    $scope.tableParams1 = createNgTableParams(data, ngTableParams, $filter, {eta: 'desc'});
+		$scope.tableParams1 = createNgTableParams(data, ngTableParams, $filter, {eta: 'desc'});
 	})
 	.error(function(){ });
 	
