@@ -183,4 +183,41 @@ class ReportsController {
 								""")
 		}
 	}
+	
+	@RequestMapping(value="/reports/statistiche/farmaciusati", method = RequestMethod.GET)
+	public @ResponseBody Object getStatisticheFarmaciUsati(HttpServletRequest request) {
+		
+		sqlService.withSql { sql ->
+		Integer cliente_id = request.getSession().getAttribute("cliente_id")
+		return sql.rows("""
+						select `somministrazione`.`farmaco_id`, 
+							   `farmaco`.`descrizione` as farmaco, 
+						       count(*) as num_caricati
+						from `somministrazione`
+						inner join `farmaco` on `farmaco`.`id` = `somministrazione`.`farmaco_id`
+						where farmaco.`cliente_id` = ${cliente_id}
+						group by `somministrazione`.`farmaco_id`
+						order by num_caricati desc
+						limit 50
+						""")
+		}
+	}
+	
+	@RequestMapping(value="/reports/statistiche/farmaciusati.csv", method = RequestMethod.GET)
+	public void getStatisticheFarmaciUsatiCsv(HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getStatisticheFarmaciUsati(request)), "farmaciusati."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+	}
+	
+	@RequestMapping(value="/reports/statistiche/farmaciusati.xls", method = RequestMethod.GET)
+	public void getStatisticheFarmaciUsatiXls(HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getStatisticheFarmaciUsati(request)), "farmaciusati."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+	}
+	
+	@RequestMapping(value="/reports/statistiche/farmaciusati.pdf", method = RequestMethod.GET)
+	public void getStatisticheFarmaciUsatiPdf(HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getStatisticheFarmaciUsati(request)), "farmaciusati."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+	}
 }
