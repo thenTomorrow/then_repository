@@ -9,7 +9,7 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
         url: 'scadenze.tpl.html'
     }, {
         title: "Top 10",
-        icon: 'glyphicon glyphicon-stats',
+        icon: 'glyphicon glyphicon-tower',
         url: 'farmaciusati.tpl.html'
     }, {
         title: 'Statistiche',
