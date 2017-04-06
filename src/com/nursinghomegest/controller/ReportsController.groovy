@@ -234,6 +234,7 @@ class ReportsController {
 						inner join `farmaco` on `farmaco`.`id` = `somministrazione`.`farmaco_id`
 						inner join paziente on paziente.id = somministrazione.paziente_id
 						where farmaco.`cliente_id` = ${cliente_id}
+						and paziente.disabilitato = 0
 						group by somministrazione.paziente_id
 						order by num_usati desc
 						limit 20
