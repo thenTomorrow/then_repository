@@ -102,13 +102,14 @@ class ScheduleService {
 		}
 		
 		clienti.each { cliente ->
+			String giorniPreavvisoCompleanno = impostazioniService.getImpostazione("numero_giorni_compleanno", cliente.id)
 			String mailToList = impostazioniService.getImpostazione("email_scadenze", cliente.id)
 			String[] mailTo = mailToList!=null?mailToList.split(","):null	
 					
 			def list = []
 			if(mailTo!=null) {
 				sqlService.withSql { sql ->
-					list = sql.rows(getCompleanniQuery(cliente.id, "2"))
+					list = sql.rows(getCompleanniQuery(cliente.id, giorniPreavvisoCompleanno))
 				}
 			}
 			
