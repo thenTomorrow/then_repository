@@ -227,16 +227,40 @@ class ReportsController {
 		sqlService.withSql { sql ->
 		Integer cliente_id = request.getSession().getAttribute("cliente_id")
 		return sql.rows("""
-						select somministrazione.paziente_id,
-						       paziente.nome,
-							   paziente.cognome,
-						       count(distinct somministrazione.`farmaco_id`) as num_usati
-						from somministrazione 
-						inner join `farmaco` on `farmaco`.`id` = `somministrazione`.`farmaco_id`
-						inner join paziente on paziente.id = somministrazione.paziente_id
-						where farmaco.`cliente_id` = ${cliente_id}
-						and paziente.disabilitato = 0
-						group by somministrazione.paziente_id
+						select g.paziente_id,
+							   g.nome,
+						       g.cognome,
+							   count(g.paziente_id) as num_usati
+						from
+						(
+							select t.farmaco_id,
+							       t.farmaco,
+							       t.paziente_id,
+							       t.nome,
+							       t.cognome,
+							       cast(sum(if(t.giorni_durata-t.giorni_passati<0,0,t.giorni_durata-t.giorni_passati)) as signed integer) as giorni_rimanenti
+							from
+							(
+								select farmaco.id as farmaco_id, 
+								       farmaco.`descrizione` as farmaco,
+								       paziente.id as paziente_id,	
+								       paziente.nome,
+								       paziente.cognome,
+								       round(farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`,0) as giorni_durata,
+								       if(DATEDIFF(NOW(),somministrazione.`data_inizio`)<0,0,DATEDIFF(NOW(),somministrazione.`data_inizio`)) as giorni_passati
+								from 
+								`somministrazione`
+								inner join farmaco on farmaco.id = somministrazione.`farmaco_id`
+								inner join paziente on paziente.id = somministrazione.`paziente_id` 
+								where paziente.disabilitato = 0
+								and paziente.cliente_id = ${cliente_id} and farmaco.cliente_id = ${cliente_id}
+								and farmaco.`quantita_per_pezzo`/`somministrazione`.`quantita`-DATEDIFF(NOW(),somministrazione.`data_inizio`)>=-2
+							) t
+							group by t.farmaco_id, t.paziente_id
+							having giorni_rimanenti>0          
+							order by giorni_rimanenti 
+						) g
+						group by g.paziente_id
 						order by num_usati desc
 						limit 10
 						""")
