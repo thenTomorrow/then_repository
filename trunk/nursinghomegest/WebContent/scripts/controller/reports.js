@@ -62,6 +62,8 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
 			$scope.labels1.push(element.cognome);
 			$scope.data1.push(element.num_usati);			
 		});
+		$scope.labels1.push('');
+		$scope.data1.push(0);
 		$scope.tableParams3 = createNgTableParams(data, ngTableParams, $filter, {num_usati: 'desc'});
 	})
 	.error(function(){ });
