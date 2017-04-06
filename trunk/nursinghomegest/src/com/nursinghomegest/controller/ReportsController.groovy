@@ -198,7 +198,7 @@ class ReportsController {
 						where farmaco.`cliente_id` = ${cliente_id}
 						group by `somministrazione`.`farmaco_id`
 						order by num_caricati desc
-						limit 20
+						limit 10
 						""")
 		}
 	}
@@ -228,7 +228,8 @@ class ReportsController {
 		Integer cliente_id = request.getSession().getAttribute("cliente_id")
 		return sql.rows("""
 						select somministrazione.paziente_id,
-						       concat(paziente.nome,' ',paziente.cognome) as paziente,
+						       paziente.nome,
+							   paziente.cognome,
 						       count(distinct somministrazione.`farmaco_id`) as num_usati
 						from somministrazione 
 						inner join `farmaco` on `farmaco`.`id` = `somministrazione`.`farmaco_id`
@@ -237,7 +238,7 @@ class ReportsController {
 						and paziente.disabilitato = 0
 						group by somministrazione.paziente_id
 						order by num_usati desc
-						limit 20
+						limit 10
 						""")
 		}
 	}

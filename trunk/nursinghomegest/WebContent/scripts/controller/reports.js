@@ -8,7 +8,7 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
         icon: 'glyphicon glyphicon-th-list',
         url: 'scadenze.tpl.html'
     }, {
-        title: "Top 20",
+        title: "Top 10",
         icon: 'glyphicon glyphicon-stats',
         url: 'farmaciusati.tpl.html'
     }, {
@@ -59,8 +59,8 @@ nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope'
 	$http.get('reports/statistiche/pazientifarmaciusati')
 	.success(function(data) {
 		data.forEach(function(element) {
-			$scope.labels1.push(element.paziente);
-			$scope.data1.push(element.num_usati);
+			$scope.labels1.push(element.cognome);
+			$scope.data1.push(element.num_usati);			
 		});
 		$scope.tableParams3 = createNgTableParams(data, ngTableParams, $filter, {num_usati: 'desc'});
 	})
