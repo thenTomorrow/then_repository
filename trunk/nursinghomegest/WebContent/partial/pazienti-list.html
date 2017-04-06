@@ -38,6 +38,7 @@
 		</div>
 	 	<div class="panel-body">
 	 		<div class="table-responsive">
+	 			<h3><span class="label label-primary">Pazienti attualmente presenti: {{numPazienti}}</span></h3>
 		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
 			    	<tr ng-repeat="paziente in $data | filter:query | filter:selectedStato">
 				      	<td data-title="'Nome'" sortable="'nome'">
