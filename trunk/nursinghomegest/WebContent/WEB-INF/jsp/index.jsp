@@ -18,6 +18,8 @@
 		<script src="js/underscore-min.js" ></script>
 		<script src="js/ng-table.min.js" ></script>
 		<script src="js/angular-sanitize.min.js" ></script>
+		<script src="js/Chart.js" ></script>
+		<script src="js/angular-chart.min.js" ></script>
 		<script src="js/nursinghome.js" ></script>
 		
 		<script src="scripts/app.js" ></script>
