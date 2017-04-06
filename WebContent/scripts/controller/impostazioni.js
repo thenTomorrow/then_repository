@@ -18,6 +18,11 @@ nursingHomeApp.controller('impostazioni', ['$scope', '$http', '$window',
 			$scope.numeroGiorni = parseInt(data);
 		}
 	});
+	$http.get('impostazioni/numero_giorni_compleanno').success(function(data) {
+		if(data!=''){
+			$scope.numeroGiorniCompleanno = parseInt(data);
+		}
+	});
 	
     $scope.save = function(){
 		
@@ -40,12 +45,24 @@ nursingHomeApp.controller('impostazioni', ['$scope', '$http', '$window',
     	.success(function(data){
     		if(data != null){
     			$scope.numeroGiorni = parseInt(data);
-    			$scope.alertOK += 'Numero giorni modificati; ';
+    			$scope.alertOK += 'Numero giorni farmaci in scadenza modificati; ';
     		}else{
-    			$scope.alertKO += 'Errore: numero giorni non modificati; ';
+    			$scope.alertKO += 'Errore: numero giorni farmaci in scadenza non modificati; ';
     		}
     	}).error(function(data, status, headers, config){
-    		$scope.alertKO += 'Errore: numero giorni non modificati; ';
+    		$scope.alertKO += 'Errore: numero giorni farmaci in scadenza non modificati; ';
+    	});
+    	
+    	$http.post('impostazioni/', {nome:'numero_giorni_compleanno', valore:$scope.numeroGiorniCompleanno})
+    	.success(function(data){
+    		if(data != null){
+    			$scope.numeroGiorniCompleanno = parseInt(data);
+    			$scope.alertOK += 'Numero giorni compleanno modificati; ';
+    		}else{
+    			$scope.alertKO += 'Errore: numero giorni compleanno non modificati; ';
+    		}
+    	}).error(function(data, status, headers, config){
+    		$scope.alertKO += 'Errore: numero giorni compleanno non modificati; ';
     	});
     
     	$window.scrollTo(0,0);
