@@ -25,6 +25,7 @@
 		</div>
 	 	<div class="panel-body">
 	 		<div class="table-responsive">
+	 			<h3><span class="label label-primary">Farmaci caricati: {{numFarmaci}}</span></h3>
 		 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams">
 			    	<tr ng-repeat="farmaco in $data | filter:query">
 				      	<td data-title="'Descrizione'" sortable="'descrizione'">
