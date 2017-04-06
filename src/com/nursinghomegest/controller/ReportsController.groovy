@@ -198,7 +198,7 @@ class ReportsController {
 						where farmaco.`cliente_id` = ${cliente_id}
 						group by `somministrazione`.`farmaco_id`
 						order by num_caricati desc
-						limit 50
+						limit 20
 						""")
 		}
 	}
@@ -219,5 +219,43 @@ class ReportsController {
 	public void getStatisticheFarmaciUsatiPdf(HttpServletRequest request, HttpServletResponse response){
 		
 		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getStatisticheFarmaciUsati(request)), "farmaciusati."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
+	}
+	
+	@RequestMapping(value="/reports/statistiche/pazientifarmaciusati", method = RequestMethod.GET)
+	public @ResponseBody Object getStatistichePazientiFarmaciUsati(HttpServletRequest request) {
+		
+		sqlService.withSql { sql ->
+		Integer cliente_id = request.getSession().getAttribute("cliente_id")
+		return sql.rows("""
+						select somministrazione.paziente_id,
+						       concat(paziente.nome,' ',paziente.cognome) as paziente,
+						       count(distinct somministrazione.`farmaco_id`) as num_usati
+						from somministrazione 
+						inner join `farmaco` on `farmaco`.`id` = `somministrazione`.`farmaco_id`
+						inner join paziente on paziente.id = somministrazione.paziente_id
+						where farmaco.`cliente_id` = ${cliente_id}
+						group by somministrazione.paziente_id
+						order by num_usati desc
+						limit 20
+						""")
+		}
+	}
+	
+	@RequestMapping(value="/reports/statistiche/pazientifarmaciusati.csv", method = RequestMethod.GET)
+	public void getStatistichePazientiFarmaciUsatiCsv(HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportCsv(getStatistichePazientiFarmaciUsati(request)), "pazientifarmaciusati."+ControllerUtil.EXT_CSV, ControllerUtil.MIME_CSV)
+	}
+	
+	@RequestMapping(value="/reports/statistiche/pazientifarmaciusati.xls", method = RequestMethod.GET)
+	public void getStatistichePazientiFarmaciUsatiXls(HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportExcel(getStatistichePazientiFarmaciUsati(request)), "pazientifarmaciusati."+ControllerUtil.EXT_XLS, ControllerUtil.MIME_XLS)
+	}
+	
+	@RequestMapping(value="/reports/statistiche/pazientifarmaciusati.pdf", method = RequestMethod.GET)
+	public void getStatistichePazientiFarmaciUsatiPdf(HttpServletRequest request, HttpServletResponse response){
+		
+		ControllerUtil.sendFile(response, ExportUtil.exportPdf(getStatistichePazientiFarmaciUsati(request)), "pazientifarmaciusati."+ControllerUtil.EXT_PDF, ControllerUtil.MIME_PDF)
 	}
 }

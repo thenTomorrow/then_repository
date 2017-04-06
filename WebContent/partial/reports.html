@@ -70,29 +70,78 @@
 	
 	<script type="text/ng-template" id="farmaciusati.tpl.html">
 		<br/>
-   		<div class="table-responsive">
-	 	  	<table class="table table-hover table-striped table-bordered" ng-table="tableParams2">
-		    	<tr ng-repeat="f in $data | filter:query">
-			      	<td data-title="'Farmaco'" sortable="'farmaco'">
-			      		<a ng-href="#farmaci/{{f.farmaco_id}}">{{f.farmaco}}</a>
-			      	</td>
-			      	<td data-title="'Caricati'" sortable="'num_caricati'" class="text-right">
-			      		{{f.num_caricati}} volte
-			      	</td>
-		    	</tr>
-	      	</table>
-      	</div>
-      	<div class="panel-footer" align="center">
-	    	<a class="btn btn-warning" ng-href="reports/statistiche/farmaciusati.csv" >
-	    		<i class="glyphicon glyphicon-export"></i> CSV
-	    	</a>
-	    	<a class="btn btn-success" ng-href="reports/statistiche/farmaciusati.xls" >
-	    		<i class="glyphicon glyphicon-export"></i> Excel
-	    	</a>
-	    	<a class="btn btn-danger" ng-href="reports/statistiche/farmaciusati.pdf" >
-	    		<i class="glyphicon glyphicon-export"></i> PDF
-	    	</a>
-	    </div>
+		<div class="row">
+    		<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">I 20 farmaci pi&ugrave; usati</div>
+ 					<div class="panel-body">
+    					<canvas id="pie" class="chart chart-pie" style="height:450px;"
+  								chart-data="data" chart-labels="labels" chart-options="options">
+						</canvas>
+						<br/>
+  						<div class="table-responsive">
+	 	  					<table class="table table-hover table-striped table-bordered" ng-table="tableParams2">
+		    					<tr ng-repeat="f in $data | filter:query">
+			      					<td>#{{$index + 1}}</td>
+									<td data-title="'Farmaco'" sortable="'farmaco'">
+			      						<a ng-href="#farmaci/{{f.farmaco_id}}">{{f.farmaco}}</a>
+			      					</td>
+			      					<td data-title="'Caricati'" sortable="'num_caricati'" class="text-right">
+			      						{{f.num_caricati}} volte
+			      					</td>
+		    					</tr>
+	      					</table>
+      					</div>
+      					<div class="panel-footer" align="center">
+	    					<a class="btn btn-warning" ng-href="reports/statistiche/farmaciusati.csv" >
+	    						<i class="glyphicon glyphicon-export"></i> CSV
+	    					</a>
+	    					<a class="btn btn-success" ng-href="reports/statistiche/farmaciusati.xls" >
+	    						<i class="glyphicon glyphicon-export"></i> Excel
+	    					</a>
+	    					<a class="btn btn-danger" ng-href="reports/statistiche/farmaciusati.pdf" >
+	    						<i class="glyphicon glyphicon-export"></i> PDF
+	    					</a>
+	    				</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">I 20 pazienti che assumono pi&ugrave; farmaci</div>
+ 					<div class="panel-body">
+    					<canvas id="doughnut" class="chart chart-doughnut" style="height:450px;"
+  								chart-data="data1" chart-labels="labels1">
+						</canvas>
+						<br/>
+  						<div class="table-responsive">
+	 	  					<table class="table table-hover table-striped table-bordered" ng-table="tableParams3">
+		    					<tr ng-repeat="f in $data | filter:query">
+			      					<td>#{{$index + 1}}</td>
+									<td data-title="'Paziente'" sortable="'paziente'">
+			      						<a ng-href="#pazienti/{{f.paziente_id}}">{{f.paziente}}</a>
+			      					</td>
+			      					<td data-title="'Farmaci assunti'" sortable="'num_usati'" class="text-right">
+			      						{{f.num_usati}}
+			      					</td>
+		    					</tr>
+	      					</table>
+      					</div>
+      					<div class="panel-footer" align="center">
+	    					<a class="btn btn-warning" ng-href="reports/statistiche/pazientifarmaciusati.csv" >
+	    						<i class="glyphicon glyphicon-export"></i> CSV
+	    					</a>
+	    					<a class="btn btn-success" ng-href="reports/statistiche/pazientifarmaciusati.xls" >
+	    						<i class="glyphicon glyphicon-export"></i> Excel
+	    					</a>
+	    					<a class="btn btn-danger" ng-href="reports/statistiche/pazientifarmaciusati.pdf" >
+	    						<i class="glyphicon glyphicon-export"></i> PDF
+	    					</a>
+	    				</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</script>
 	
 	<script type="text/ng-template" id="statistiche.tpl.html">
