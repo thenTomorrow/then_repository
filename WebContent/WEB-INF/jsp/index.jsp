@@ -119,7 +119,7 @@
 	      		<h4>{{body}}</h4>
 			</div>
 	      	<div class="modal-footer">
-	      		<a href="logout" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> Si</a>
+	      		<a href="logout" class="btn btn-danger" onclick="logout.performClick();"><i class="glyphicon glyphicon-off"></i> Si</a>
 		        <button type="button" class="btn btn-default" ng-click="cancel()">No</button>
 			</div>
     	</script>
