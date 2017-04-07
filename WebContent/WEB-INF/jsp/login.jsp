@@ -23,7 +23,7 @@
 		<div class="container" ng-controller="Login" style="text-align: center;width: 100%">
 			<br/>
 	      	<center>
-	      	<div class="panel panel-primary" style="padding: 2px;width: 400px;">
+	      	<div class="panel panel-primary" style="padding: 2px;max-width: 400px;">
 				<div class="panel-heading">
 					Area Privata
 				</div>		
