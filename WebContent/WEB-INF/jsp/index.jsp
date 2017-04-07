@@ -6,9 +6,9 @@
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="icon" type="image/png" href="img/{{nome}}.png" />
-		<meta http-equiv="cache-control" content="no-cache" />
-		<meta http-equiv="expires" content="0" />
-		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
 		
 		<script src="js/jquery-2.1.4.min.js" ></script>
 		<script src="js/angular.min.js" ></script>
@@ -80,6 +80,9 @@
 			$scope.intestazione = '';
 			$scope.indirizzo = '';
 			$scope.nome = '';
+			
+			var d = new Date();
+			$scope.reload = d.getTime(); 
 			$http.get('cliente')
 			.success(function(data) {
 			    $scope.intestazione = data.denominazione;
