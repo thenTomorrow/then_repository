@@ -81,8 +81,6 @@
 			$scope.indirizzo = '';
 			$scope.nome = '';
 			
-			var d = new Date();
-			$scope.reload = d.getTime(); 
 			$http.get('cliente')
 			.success(function(data) {
 			    $scope.intestazione = data.denominazione;
