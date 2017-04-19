@@ -172,7 +172,9 @@
 			      			{{statistica.eta}} anni
 			      		</td>
 						<td data-title="'Prossimo Compleanno tra'" sortable="'num_giorni_compleanno'" class="text-right">
-			      			{{statistica.num_giorni_compleanno}} giorni il {{statistica.giorno_compleanno}} 
+			      			<span ng-show="statistica.num_giorni_compleanno>1">{{statistica.num_giorni_compleanno}} giorni il {{statistica.giorno_compleanno}}</span> 
+			      			<span ng-show="statistica.num_giorni_compleanno==1">domani</span> 
+			      			<span ng-show="statistica.num_giorni_compleanno==0">oggi</span> 
 			      		</td>
 		    		</tr>
 	      		</table>
