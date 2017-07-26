@@ -1,5 +1,6 @@
 var nursingHomeApp =  angular.module('nursingHomeApp');
  
+
 nursingHomeApp.controller('reports', ['$scope', '$http', '$filter', '$rootScope', 'ngTableParams',
   function ($scope, $http, $filter, $rootScope, ngTableParams) {
 	
