@@ -5,8 +5,8 @@ var nursingHomeApp = angular.module('nursingHomeApp', [
 	'ngSanitize',
 	'chart.js'
 ]);
- 
- 
+
+
 nursingHomeApp.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider.
