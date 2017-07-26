@@ -1,5 +1,6 @@
 var nursingHomeApp =  angular.module('nursingHomeApp');
 
+
 nursingHomeApp.controller('esami-detail', ['$scope', '$routeParams', '$http', '$modal', '$location', '$window', '$rootScope',
   function($scope, $routeParams, $http, $modal, $location, $window, $rootScope) {
 	
