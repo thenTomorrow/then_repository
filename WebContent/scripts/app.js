@@ -6,7 +6,6 @@ var nursingHomeApp = angular.module('nursingHomeApp', [
 	'chart.js'
 ]);
 
-
 nursingHomeApp.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider.
